@@ -1,4 +1,7 @@
 from django.utils.translation import  ugettext_lazy as _
+from django.forms.models import BaseInlineFormSet
+from django.core.exceptions import ValidationError
+from django.db.models import Q
 from Product.models import Category,Product,Imports,Transfers,Sales
 from django.contrib import admin
 from django import forms
@@ -13,10 +16,6 @@ class ProductInline(admin.TabularInline):
 class CategoryAdmin(admin.ModelAdmin):   
     list_display = ('name',)
     inlines = [ProductInline,]
-
-
-from django.forms.models import BaseInlineFormSet
-from django.core.exceptions import ValidationError
 
 class TransfersInlineValidation(BaseInlineFormSet):
     def clean(self):
@@ -40,9 +39,15 @@ class TransfersInline(admin.TabularInline):
     formset = TransfersInlineValidation
     fields=('fk_import','fk_location_to','quantity', 'price','discount_rate','the_date')
     extra = 0
+    
+    def get_queryset(self, request):
+        qs = super(TransfersInline, self).get_queryset(request)
+        # display just transfers made from imports
+        qs = qs.filter(fk_location_from = None)
+        return qs
 
 class ImportsAdmin(admin.ModelAdmin):   
-    list_display = ('fk_product','quantity','price','the_date')
+    list_display = ('id','fk_product','quantity','price','the_date')
     inlines = (TransfersInline,)
 
 class TransfersForm(forms.ModelForm):
@@ -54,16 +59,32 @@ class TransfersForm(forms.ModelForm):
         fk_import_obj = self.cleaned_data.get('fk_import')
         fk_location_from_obj = self.cleaned_data.get('fk_location_from')
         quantity_obj = self.cleaned_data.get('quantity')
-        availableQuantity = fk_import_obj.quantity - Transfers.objects.filter(fk_import = fk_import_obj).aggregate(transferredQuantity = Coalesce(Sum('quantity'),0))['transferredQuantity']
-        if fk_import_obj.fk_location_to != fk_location_from_obj:
-            raise forms.ValidationError(_("This Location to transfer to not has chosen import, This import is in ")+ unicode(fk_import_obj.fk_location_to))
-        if quantity_obj > availableQuantity:
+        
+        totalTransferred = Transfers.objects.filter(Q(fk_location_from = fk_location_from_obj)|Q(fk_location_to = fk_location_from_obj),fk_import=fk_import_obj)
+        availableQuantity = 0
+        totalTransferred_in_ids = []
+        for oneTransfer in totalTransferred:
+            if oneTransfer.fk_location_from == fk_location_from_obj:
+                availableQuantity -= oneTransfer.quantity
+            if oneTransfer.fk_location_to == fk_location_from_obj:
+                availableQuantity += oneTransfer.quantity
+                totalTransferred_in_ids.append(oneTransfer.id)
+        soldQuantity = Sales.objects.filter(fk_transfer__in = totalTransferred_in_ids).aggregate(soldQuantity = Coalesce(Sum('quantity'),0))['soldQuantity']
+        availableQuantity -= soldQuantity
+        if availableQuantity < quantity_obj:
             raise forms.ValidationError(_("This Quantity is not Available, Available Quantity = ") + unicode(availableQuantity))
         return self.cleaned_data
 
 class TransfersAdmin(admin.ModelAdmin):   
     form = TransfersForm
-    list_display = ('fk_import','fk_location_from','fk_location_to','quantity','price','discount_rate','the_date')
+    list_display = ('id','fk_import','fk_location_from','fk_location_to','quantity','price','discount_rate','the_date')
+
+    def get_queryset(self, request):
+        # remove imported data from suppler  (from None)
+        qs = super(TransfersAdmin, self).get_queryset(request)
+        qs = qs.exclude(fk_location_from__isnull = True)
+        return qs
+
 
 class SalesForm(forms.ModelForm):
     class Meta:

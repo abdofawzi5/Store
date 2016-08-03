@@ -41,7 +41,7 @@ class Imports(models.Model):
     the_date = models.DateField(default=date.today ,blank=False, verbose_name = _('Date'))
     
     def __unicode__(self):
-        return unicode(self.fk_product) +'('+ unicode(self.the_date)+')'
+        return unicode(self.id) +' '+unicode(self.fk_product) +'('+ unicode(self.the_date)+')'
     
     class Meta:
         verbose_name = _('Import')
@@ -59,7 +59,7 @@ class Transfers(models.Model):
     the_date = models.DateField(default=date.today ,blank=False, verbose_name = _('Date'))
     
     def __unicode__(self):
-        return unicode(self.fk_import) +'('+ unicode(self.the_date)+')'
+        return unicode(self.id) +' '+unicode(self.fk_import) +'('+ unicode(self.the_date)+')'
     
     class Meta:
         verbose_name = _('Transfer')
