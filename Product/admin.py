@@ -14,9 +14,36 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name',)
     inlines = [ProductInline,]
 
-class ImportsAdmin(admin.ModelAdmin):   
-    list_display = ('fk_product','fk_location_to','quantity','price','the_date')
 
+from django.forms.models import BaseInlineFormSet
+from django.core.exceptions import ValidationError
+
+class TransfersInlineValidation(BaseInlineFormSet):
+    def clean(self):
+        super(TransfersInlineValidation, self).clean()
+        totalQuantity = 0
+        fk_import_obj = None
+        for form in self.forms:
+            if not form.is_valid():
+                return #other errors exist, so don't bother
+            if form.cleaned_data and not form.cleaned_data.get('DELETE'):
+                totalQuantity += form.cleaned_data['quantity']
+            if fk_import_obj is None:
+                fk_import_obj = form.cleaned_data['fk_import']
+        # to check quantity is less than imported
+        if fk_import_obj.quantity < totalQuantity:
+            raise ValidationError(_('Quantity in Locations more than imported'))
+        self.instance.__total__ = totalQuantity
+
+class TransfersInline(admin.TabularInline):
+    model = Transfers
+    formset = TransfersInlineValidation
+    fields=('fk_import','fk_location_to','quantity', 'price','discount_rate','the_date')
+    extra = 0
+
+class ImportsAdmin(admin.ModelAdmin):   
+    list_display = ('fk_product','quantity','price','the_date')
+    inlines = (TransfersInline,)
 
 class TransfersForm(forms.ModelForm):
     class Meta:
@@ -47,7 +74,6 @@ class SalesForm(forms.ModelForm):
         price_obj = self.cleaned_data.get('price')
         quantity_obj = self.cleaned_data.get('quantity')
         fk_transfer_obj = self.cleaned_data.get('fk_transfer')
-        print self.cleaned_data
         minPrice = float(fk_transfer_obj.price * (100 - fk_transfer_obj.discount_rate))/100
         availableQuantity = fk_transfer_obj.quantity - Sales.objects.filter(fk_transfer=fk_transfer_obj).aggregate(soldQuantity = Coalesce(Sum('quantity'),0))['soldQuantity']
         if quantity_obj > availableQuantity:

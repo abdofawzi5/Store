@@ -36,7 +36,6 @@ class Product(models.Model):
 
 class Imports(models.Model):
     fk_product = models.ForeignKey(Product, verbose_name = _('Product Product'),related_name = _('Product'))
-    fk_location_to = models.ForeignKey(Location, verbose_name=_('Import To'),related_name = _('ImportTo'))
     quantity = models.IntegerField(default=0, verbose_name=_('Quantity'))
     price = models.FloatField(blank=True,null=True,default=0 ,verbose_name=_('Total Price'))
     the_date = models.DateField(default=date.today ,blank=False, verbose_name = _('Date'))
