@@ -28,6 +28,9 @@ class TransfersInlineValidation(BaseInlineFormSet):
                 return #other errors exist, so don't bother
             if form.cleaned_data and not form.cleaned_data.get('DELETE'):
                 totalQuantity += form.cleaned_data['quantity']
+                if form.cleaned_data['quantity'] == 0:
+                    raise ValidationError(_("Can't transfer Zero quantity"))
+                    break
             if fk_import_obj is None:
                 fk_import_obj = form.cleaned_data['fk_import']
         # to check quantity is less than imported
@@ -61,6 +64,8 @@ class TransfersForm(forms.ModelForm):
         fk_location_from_obj = self.cleaned_data.get('fk_location_from')
         quantity_obj = self.cleaned_data.get('quantity')
         availableQuantity = availableQuantityInLocation(fk_import_obj, fk_location_from_obj)
+        if quantity_obj == 0:
+            raise ValidationError(_("Can't transfer Zero quantity"))
         if availableQuantity < quantity_obj:
             raise forms.ValidationError(_("This Quantity is not Available, Available Quantity = ") + unicode(availableQuantity))
         return self.cleaned_data
@@ -87,7 +92,7 @@ class SalesForm(forms.ModelForm):
         price_obj = self.cleaned_data.get('price')
         quantity_obj = self.cleaned_data.get('quantity')
         if quantity_obj == 0:
-            raise forms.ValidationError(_("You can't sell Zero quantity"))
+            raise forms.ValidationError(_("Can't sell Zero quantity"))
         
         availableQuantity = availableQuantityInLocation(fk_import_obj, fk_location_obj)
         if quantity_obj > availableQuantity:
