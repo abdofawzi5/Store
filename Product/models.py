@@ -9,21 +9,21 @@ LONG_NAME_LENGTH = 50
 SHORT_TEXT_LENGTH = 100
 LONG_TEXT_LENGTH = 800
 
-class Category(models.Model):
+class ProductCategory(models.Model):
     name = models.CharField(max_length = SHORT_NAME_LENGTH, verbose_name=_('Category'))
 
     def __unicode__(self):
         return unicode(self.name)
 
     class Meta:
-        verbose_name = _('Category')
-        verbose_name_plural = _('Categories')
+        verbose_name = _('Product Category')
+        verbose_name_plural = _('Product Categories')
 
 class Product(models.Model):
     name = models.CharField(max_length = SHORT_NAME_LENGTH, verbose_name=_('Product Name'))
     photo = models.ImageField(blank = True, null = True ,upload_to = 'Product/' ,verbose_name = _('photo'))
     description = models.CharField(blank = True, null = True,max_length = LONG_TEXT_LENGTH, verbose_name = _('Description'))
-    fk_category = models.ForeignKey(Category, verbose_name=_('Category'))
+    fk_category = models.ForeignKey(ProductCategory, verbose_name=_('Category'))
     createdAt = models.DateField(auto_now_add=True , verbose_name = _('Created At'))
 
     def __unicode__(self):
