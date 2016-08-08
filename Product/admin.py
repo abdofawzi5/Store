@@ -135,7 +135,6 @@ class SalesAdmin(admin.ModelAdmin):
             for one_location in all_locations:
                 if availableQuantityInLocation(one_import, one_location) > 0:
                     importsAvaliable.append(one_import.id)
-        print importsAvaliable
         context['adminform'].form.fields['fk_import'].queryset = Imports.objects.filter(id__in = importsAvaliable)
         return super(SalesAdmin, self).render_change_form(request, context, args, kwargs)             
 
@@ -164,3 +163,4 @@ admin.site.register(Sales, SalesAdmin)
 # hide add group
 from django.contrib.auth.models import Group
 admin.site.unregister(Group)
+

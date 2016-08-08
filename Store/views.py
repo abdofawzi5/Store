@@ -1,11 +1,13 @@
 from django.contrib.auth.decorators import login_required
 import os
 from django.http import HttpResponse
-from django.core.servers.basehttp import FileWrapper
+from wsgiref.util import FileWrapper
+from Store import settings
+
+from django.views.static import serve
+#from django.core.servers.basehttp import FileWrapper
 
 @login_required
-def protected_media(request, filename):
-    wrapper = FileWrapper(file(filename))
-    response = HttpResponse(wrapper, content_type='text/plain')
-    response['Content-Length'] = os.path.getsize(filename)
-    return response
+def protected_media(request, filename=None, show_indexes=False):
+    return serve(request, filename,settings.MEDIA_ROOT,  show_indexes)
+
