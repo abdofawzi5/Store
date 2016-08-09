@@ -7,7 +7,7 @@ from django.contrib import admin
 from django import forms
 from django.db.models.functions import Coalesce
 from django.db.models.aggregates import Sum
-from Product.views import availableQuantityInLocation
+from Product.views import availableQuantityInLocation, availableImportsIDs
 from Company.models import Location
 
 class ProductInline(admin.TabularInline):   
@@ -98,7 +98,6 @@ class SalesForm(forms.ModelForm):
         fk_location_obj = self.cleaned_data.get('fk_location')
         price_obj = self.cleaned_data.get('price')
         quantity_obj = self.cleaned_data.get('quantity')
-        print self.request
         if fk_location_obj not in self.request.user.fk_locations.all() and self.request.user.is_superuser == False:
             raise forms.ValidationError(_("You don't have permission to add sales to this location"))
         
@@ -112,7 +111,6 @@ class SalesForm(forms.ModelForm):
         minPrice = float(fk_import_obj.selling_price * (100 - fk_import_obj.discount_rate))/100
         if price_obj < minPrice:
             raise forms.ValidationError(_("Can't sale less than ") + unicode(minPrice))
- 
         
         return self.cleaned_data
 
@@ -123,19 +121,16 @@ class SalesAdmin(admin.ModelAdmin):
     def render_change_form(self, request, context, *args, **kwargs):
         all_locations = None
         if request.user.is_superuser == False:
-            # limit choices of location with location can user access
+            # limit choices of location with locations can user access
             all_locations = request.user.fk_locations.all()
             context['adminform'].form.fields['fk_location'].queryset = Location.objects.filter(id__in = all_locations)
         else:
             all_locations = Location.objects.all()
-        # limit choices of imports with imports have quantity in this location
-        all_imports = Imports.objects.all()
-        importsAvaliable = []
-        for one_import in all_imports:
-            for one_location in all_locations:
-                if availableQuantityInLocation(one_import, one_location) > 0:
-                    importsAvaliable.append(one_import.id)
-        context['adminform'].form.fields['fk_import'].queryset = Imports.objects.filter(id__in = importsAvaliable)
+        # limit choices of imports with imports have quantity in each location
+        importsIDs = []
+        for one_location in all_locations:     
+            importsIDs += availableImportsIDs(one_location)
+        context['adminform'].form.fields['fk_import'].queryset = Imports.objects.filter(id__in = importsIDs)
         return super(SalesAdmin, self).render_change_form(request, context, args, kwargs)             
 
     # add request key to self to access request in forms
