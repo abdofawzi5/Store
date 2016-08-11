@@ -1,14 +1,12 @@
 from django.utils.translation import  ugettext_lazy as _
 from django.forms.models import BaseInlineFormSet
 from django.core.exceptions import ValidationError
-from django.db.models import Q
-from Product.models import ProductCategory,Product,Imports,Transfers,Sales
+from Product.models import ProductCategory,Product,Imports,Transfers,Sales,SalesItems
 from django.contrib import admin
 from django import forms
-from django.db.models.functions import Coalesce
-from django.db.models.aggregates import Sum
-from Product.views import availableQuantityInLocation
+from Product.views import availableQuantityInLocation, availableImports
 from Company.models import Location
+from MyUser.views import availableLocation
 
 class ProductInline(admin.TabularInline):   
     model = Product 
@@ -33,11 +31,13 @@ class TransfersInlineValidation(BaseInlineFormSet):
                     raise ValidationError(_("Can't transfer Zero quantity"))
                     break
             if fk_import_obj is None:
-                fk_import_obj = form.cleaned_data['fk_import']
-                    
+                try:
+                    fk_import_obj = form.cleaned_data['fk_import']
+                except:
+                    raise ValidationError(_('Enter Location and Quantity'))                    
         # to check quantity is less than imported
         if fk_import_obj is not None and fk_import_obj.quantity < totalQuantity:
-            raise ValidationError(_('Quantity in Locations more than imported'))
+            raise ValidationError(_('Quantity to transfer is more than imported'))
         self.instance.__total__ = totalQuantity
 
 class TransfersInline(admin.TabularInline):
@@ -82,70 +82,84 @@ class TransfersAdmin(admin.ModelAdmin):
         qs = qs.exclude(fk_location_from__isnull = True)
         return qs
 
+    def render_change_form(self, request, context, *args, **kwargs):
+        # get locations can user access
+        all_locations = availableLocation(request)
+        # show imports that has quantity
+        context['adminform'].form.fields['fk_import'].queryset = Imports.objects.filter(id__in = availableImports(all_locations))
+        return super(TransfersAdmin, self).render_change_form(request, context, args, kwargs)             
 
-class SalesForm(forms.ModelForm):
-    class Meta:
-        model = Sales
-        exclude = 0
 
-    def __init__(self, *args, **kwargs):
-        # to add request to form
-        self.request = kwargs.pop('request', None)
-        super(SalesForm, self).__init__(*args, **kwargs)
+"""
+*******************************************************************************
+************************************ Sales ************************************
+*******************************************************************************
+"""
 
+class SalesItemInlineValidation(BaseInlineFormSet):
     def clean(self):
-        fk_import_obj = self.cleaned_data.get('fk_import')
-        fk_location_obj = self.cleaned_data.get('fk_location')
-        price_obj = self.cleaned_data.get('price')
-        quantity_obj = self.cleaned_data.get('quantity')
-        print self.request
-        if fk_location_obj not in self.request.user.fk_locations.all() and self.request.user.is_superuser == False:
-            raise forms.ValidationError(_("You don't have permission to add sales to this location"))
-        
-        if quantity_obj == 0:
-            raise forms.ValidationError(_("Can't sell Zero quantity"))
-            
-        availableQuantity = availableQuantityInLocation(fk_import_obj, fk_location_obj)
-        if quantity_obj > availableQuantity:
-            raise forms.ValidationError(_("This Quantity is not Available, Available Quantity = ") + unicode(availableQuantity))
-     
-        minPrice = float(fk_import_obj.selling_price * (100 - fk_import_obj.discount_rate))/100
-        if price_obj < minPrice:
-            raise forms.ValidationError(_("Can't sale less than ") + unicode(minPrice))
- 
-        
-        return self.cleaned_data
+        super(SalesItemInlineValidation, self).clean()
+        totalQuantity = 0
+        importQuantity = []
+        for form in self.forms:
+            if not form.is_valid():
+                return #other errors exist, so don't bother
+            if form.cleaned_data and not form.cleaned_data.get('DELETE'):
+                totalQuantity += form.cleaned_data['quantity']
+                if form.cleaned_data['quantity'] == 0:
+                    raise ValidationError(_("Can't sell Zero quantity"))
+                fk_import_obj = form.cleaned_data['fk_import']
+                fk_location_obj = (form.cleaned_data['fk_sales']).fk_location
+                quantity_obj = form.cleaned_data['quantity']
+                price_obj = form.cleaned_data['price']
+                minPrice = float(fk_import_obj.selling_price * (100 - fk_import_obj.discount_rate))/100
+                if minPrice > price_obj:
+                    raise ValidationError(_("Can't sale less than ") + unicode(minPrice))
+                found = False
+                for oneImport in importQuantity:
+                    if oneImport['fk_import'] == fk_import_obj:
+                        found = True
+                        oneImport['quantity'] += quantity_obj
+                if found == False:
+                    oneImportQuantity = {'fk_import':fk_import_obj,'quantity':quantity_obj,'availableQuantity':availableQuantityInLocation(fk_import_obj, fk_location_obj)}
+                    importQuantity.append(oneImportQuantity)
+        # to check quantity is less than imported
+        for oneImport in importQuantity:
+            if oneImport['availableQuantity'] < oneImport['quantity']:
+                errorMsg = unicode(_('Quantity more than imported for '))
+                errorMsg += unicode(oneImport['fk_import'].fk_product.__unicode__())
+                errorMsg += unicode(_(' Available Quantity is '))
+                errorMsg += unicode(oneImport['availableQuantity'])
+                raise ValidationError(errorMsg)
+        if totalQuantity <= 0:
+            raise ValidationError(_("Can't sell Zero quantity"))
+             
+        self.instance.__total__ = totalQuantity
+
+
+class SalesItemInline(admin.TabularInline):
+    model = SalesItems
+    formset = SalesItemInlineValidation
+    fields=('fk_sales','fk_import','quantity','price')
+    extra = 0
+    
+    def formfield_for_foreignkey(self, db_field, request=None, **kwargs):
+        if db_field.name == 'fk_import':
+            # get locations can user access
+            all_locations = availableLocation(request)
+            # show imports that has quantity
+            kwargs['queryset'] = Imports.objects.filter(id__in = availableImports(all_locations))
+        return super(SalesItemInline, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
 class SalesAdmin(admin.ModelAdmin): 
-    form = SalesForm
-    list_display = ('id','the_date','fk_import','fk_location','quantity','price')
+    list_display = ('id','the_date','fk_location')
+    inlines = [SalesItemInline,]
 
     def render_change_form(self, request, context, *args, **kwargs):
-        all_locations = None
-        if request.user.is_superuser == False:
-            # limit choices of location with location can user access
-            all_locations = request.user.fk_locations.all()
-            context['adminform'].form.fields['fk_location'].queryset = Location.objects.filter(id__in = all_locations)
-        else:
-            all_locations = Location.objects.all()
-        # limit choices of imports with imports have quantity in this location
-        all_imports = Imports.objects.all()
-        importsAvaliable = []
-        for one_import in all_imports:
-            for one_location in all_locations:
-                if availableQuantityInLocation(one_import, one_location) > 0:
-                    importsAvaliable.append(one_import.id)
-        context['adminform'].form.fields['fk_import'].queryset = Imports.objects.filter(id__in = importsAvaliable)
+        # limit choices of location with location can user access
+        all_locations = availableLocation(request)
+        context['adminform'].form.fields['fk_location'].queryset = Location.objects.filter(id__in = all_locations)
         return super(SalesAdmin, self).render_change_form(request, context, args, kwargs)             
-
-    # add request key to self to access request in forms
-    def get_form(self, request, obj=None, **kwargs):
-        AdminForm = super(SalesAdmin, self).get_form(request, obj, **kwargs)
-        class AdminFormWithRequest(AdminForm):
-            def __new__(cls, *args, **kwargs):
-                kwargs['request'] = request
-                return AdminForm(*args, **kwargs)
-        return AdminFormWithRequest
 
     def get_queryset(self, request):
         qs = super(SalesAdmin, self).get_queryset(request)
