@@ -4,12 +4,16 @@ from django.core.exceptions import ValidationError
 from Product.models import ProductCategory,Product,Imports,Transfers,Sales,SalesItems
 from django.contrib import admin
 from django import forms
-from Product.views import availableQuantityInLocation, availableImports
-from django.db.models.functions import Coalesce
-from django.db.models.aggregates import Sum
+from Product.views import availableImports
 from Product.views import availableQuantityInLocation
 from Company.models import Location
 from MyUser.views import availableLocation
+
+"""
+*******************************************************************************
+*********************************** Product ***********************************
+*******************************************************************************
+"""
 
 class ProductInline(admin.TabularInline):   
     model = Product 
@@ -18,7 +22,15 @@ class ProductInline(admin.TabularInline):
 
 class CategoryAdmin(admin.ModelAdmin):   
     list_display = ('name',)
+    search_fields=['name',]
+    list_filter = ('name',)
     inlines = [ProductInline,]
+
+"""
+*******************************************************************************
+*********************************** Imports ***********************************
+*******************************************************************************
+"""
 
 class TransfersInlineValidation(BaseInlineFormSet):
     def clean(self):
@@ -57,7 +69,26 @@ class TransfersInline(admin.TabularInline):
 
 class ImportsAdmin(admin.ModelAdmin):
     list_display = ('id','the_date','fk_product','quantity','price','selling_price','discount_rate')
+    search_fields=['id','the_date','fk_product__name','fk_product__fk_category__name']
+    list_filter = ('fk_product__fk_category__name', 'fk_product__name')
     inlines = (TransfersInline,)
+    fieldsets = (
+        (None, {
+            'fields': ('fk_product', 'the_date')
+        }),
+        (_('Import Info'), {
+            'fields': (('quantity', 'price'),),
+        }),
+        (_('Selling Plan'), {
+            'fields': (('selling_price', 'discount_rate'),),
+        }),
+    )
+
+"""
+*******************************************************************************
+********************************** Transfers **********************************
+*******************************************************************************
+"""
 
 class TransfersForm(forms.ModelForm):
     class Meta:
@@ -78,7 +109,20 @@ class TransfersForm(forms.ModelForm):
 class TransfersAdmin(admin.ModelAdmin):
     form = TransfersForm
     list_display = ('id','fk_import','fk_location_from','fk_location_to','quantity','the_date')
-
+    search_fields=['id','fk_import__id','the_date','fk_location_from__name','fk_location_to__name']
+    list_filter = ('fk_location_from','fk_location_to')
+    fieldsets = (
+        (None, {
+            'fields': ('fk_import', 'the_date')
+        }),
+        (_('Location'), {
+            'fields': ('fk_location_from', 'fk_location_to',),
+        }),
+        (_('Quantity'), {
+            'fields': ('quantity',),
+        }),
+    )
+    
     def get_queryset(self, request):
         # remove imported data from suppler  (from None)
         qs = super(TransfersAdmin, self).get_queryset(request)
@@ -91,7 +135,6 @@ class TransfersAdmin(admin.ModelAdmin):
         # show imports that has quantity
         context['adminform'].form.fields['fk_import'].queryset = Imports.objects.filter(id__in = availableImports(all_locations))
         return super(TransfersAdmin, self).render_change_form(request, context, args, kwargs)             
-
 
 """
 *******************************************************************************
@@ -156,6 +199,8 @@ class SalesItemInline(admin.TabularInline):
 
 class SalesAdmin(admin.ModelAdmin): 
     list_display = ('id','the_date','fk_location')
+    search_fields=['id','the_date','fk_location__name',]
+    list_filter = ('fk_location__name','id','the_date',)
     inlines = [SalesItemInline,]
 
     def render_change_form(self, request, context, *args, **kwargs):
