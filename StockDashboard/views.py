@@ -1,3 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render_to_response
+from django.contrib.auth.decorators import login_required
 
-# Create your views here.
+#@login_required(login_url='/admin/login/')
+def companyLevel(request):
+    context = {}
+    return render_to_response('StockDashboard/companyLevel.html',context)

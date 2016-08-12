@@ -59,7 +59,7 @@ ROOT_URLCONF = 'Store.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR+'/templates/',True],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -67,6 +67,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+#                 'django.template.context_processors.i18n',
             ],
         },
     },
