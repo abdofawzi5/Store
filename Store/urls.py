@@ -15,7 +15,7 @@ urlpatterns = [
 
     # Examples:
     # url(r'^$', 'Store.views.home', name='home'),
-    url(r'^StockDashboard/', include('StockDashboard.urls',namespace="StockDashboard")),
+    url(r'^stockdashboard/', include('StockDashboard.urls',namespace="StockDashboard")),
     
 ] 
 

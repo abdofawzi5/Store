@@ -5,3 +5,15 @@ from django.contrib.auth.decorators import login_required
 def companyLevel(request):
     context = {}
     return render_to_response('StockDashboard/companyLevel.html',context)
+
+
+
+
+
+
+
+
+
+
+
+
