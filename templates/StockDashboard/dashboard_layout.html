@@ -21,8 +21,13 @@
 <!--     <link href="{% static 'StockDashboard/css/rtl-min.css' %}" rel="stylesheet" type="text/css" />
  -->
     {% block import_style%}{%endblock%}
+    <style type="text/css">
+      .faicon-size{
+        font-size: 1.5em;text-shadow: 1px 1px 1px #ccc;
+      }
+    </style>
   </head>
-  <body class="skin-blue sidebar-mini">
+  <body class="skin-purple sidebar-mini">
     <div class="wrapper">
 
 <!-- ******************************************************************************** -->
@@ -45,11 +50,40 @@
           <!-- Navbar Right Menu -->
           <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
-              <!-- Messages: style can be found in dropdown.less-->
+				<!-- Filter: style can be found in dropdown.less -->
+				<li class="dropdown user user-menu">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+					  <i class="fa fa-filter faicon-size"></i>
+					</a>
+					<ul class="dropdown-menu" >
+						<!-- User image -->
+						<li class="user-header" style="height:110px;">
+						<p>Filter on specific date</p>
+					    	<!-- Date Filter -->
+						    <div class="form-group">
+						        <div class="input-group">
+						          <div class="input-group-addon">
+						            <i class="fa fa-calendar"></i>
+						          </div>
+						          <input type="text" class="dateFilter form-control pull-right" name="dateFilter"  id="dateFilter" style="position: relative; z-index: 100000;" />
+						        </div><!-- /.input group -->
+						    </div><!-- /.form group -->
+					  </li>
+					  <!-- Menu Footer-->
+					  <li class="user-footer">
+					    <div class="pull-left">
+					      <a href="#" class="btn btn-default btn-flat">Filter</a>
+					    </div>
+					    <div class="pull-right">
+					      <a href="#" class="btn btn-default btn-flat">Go Live</a>
+					    </div>
+					  </li>
+					</ul>
+				</li>
+              <!-- Logout: style can be found in dropdown.less-->
               <li class="dropdown messages-menu">
-                <a href="#" class="dropdown-toggle">
-                  <small class="h4">logout&nbsp;</small>
-                  <i class="fa fa-sign-out"></i>
+                <a href="/admin/logout/?next=/" class="dropdown-toggle">
+                  <i class="fa fa-sign-out faicon-size"></i>
                 </a>
               </li>
             </ul>
@@ -65,8 +99,8 @@
         <!-- sidebar: style can be found in sidebar.less -->
         <section class="sidebar">
           <!-- sidebar menu: : style can be found in sidebar.less -->
-          <ul class="sidebar-menu">
-            {% block sidebar_menu%}{%endblock%}            
+          <ul class="sidebar-menu">            
+            {% block sidebar_menu%}{%endblock%}
           </ul>
         </section>
         <!-- /.sidebar -->
@@ -96,7 +130,7 @@
 <!-- ************************************* Footer **************************************** -->
 <!-- ************************************************************************************* -->
       <footer class="main-footer">
-        <strong>Copyright &copy; 2014-2015 <a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong> All rights reserved.
+        <strong>Copyright &copy; 2016 <a href="https://eg.linkedin.com/in/abdelrahman-mohamed-8393bb91">Abdelrahman Mohamed</a>.</strong> All rights reserved.
       </footer>
 
 

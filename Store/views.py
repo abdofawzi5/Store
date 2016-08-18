@@ -7,7 +7,7 @@ from Store import settings
 from django.views.static import serve
 #from django.core.servers.basehttp import FileWrapper
 
-@login_required
+@login_required(login_url='/admin/login/')
 def protected_media(request, filename=None, show_indexes=False):
     return serve(request, filename,settings.MEDIA_ROOT,  show_indexes)
 
