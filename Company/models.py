@@ -33,7 +33,6 @@ class LocationType(models.Model):
         verbose_name = _('Location Type')
         verbose_name_plural = _('Location Types')
 
-
 class Location(models.Model):
     fk_locationType = models.ForeignKey(LocationType ,verbose_name = _('Location Type'))
     name = models.CharField(max_length = SHORT_NAME_LENGTH, verbose_name=_('Name'))
