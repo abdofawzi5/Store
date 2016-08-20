@@ -12,7 +12,7 @@ def getAllLocations():
             dict['name'] = [location['name']]
             locationsList.append(dict)
         else:
-            dict['name'].append(location['name'])
-    return locationsList        
+            found['name'].append(location['name'])
+    return locationsList
 
 

@@ -14,9 +14,7 @@ In HTML:
 '''
 
 import json
-
-def clearStandardName(word):
-    return word.replace ('_',' ').title()
+from datetime import timedelta
 
 def pieChart (dataDictionaryInList,chartTitle,unit):
     yAxis =[]
@@ -28,54 +26,21 @@ def pieChart (dataDictionaryInList,chartTitle,unit):
 
     return setChart(chartTitle, None, yAxis,None,None,unit)
 
-def ChartDays (dataDictionaryInList,xAxisFrom,xAxisTo,chartTitle,yAxisTitle,yAxisTitle2,unit,stand,standParameters):
-    xAxis =[]
-    yAxis =[]
-    for dic in dataDictionaryInList:
-        yAxis.append(yAxisForm(dic['name'], dic['data']))
-    
-    if stand is not None:
-        for s in stand:
-            for parameters in standParameters:
-                name = str(s)+' Standard - '+clearStandardName(parameters)
-                data = []
-                for oneStand in stand.get(s):
-                    data.append(oneStand[parameters])
-                if len(data) + xAxisFrom > xAxisTo:
-                    xAxisTo = len(data) + xAxisFrom
-                yAxis.append(yAxisForm(name, data))
+def xAxisListDates(fromDate,toDate):
+    xAxis = []
+    while fromDate <= toDate:
+        xAxis.append(str(fromDate))
+        fromDate += timedelta(1)
+    return xAxis
+
+def xAxisListNumbers(fromNum,toNum,unit):
+    xAxis = []
     if unit is None:
         unit = ''
-
-    for i in range(xAxisFrom,xAxisTo):
-        xAxis.append(str(i))
-
-    return setChart(chartTitle, xAxis, yAxis,yAxisTitle, yAxisTitle2, unit)
-
-def ChartWeeks (dataDictionaryInList,xAxisFrom,xAxisTo,chartTitle,yAxisTitle,yAxisTitle2,unit,stand,standParameters):
-    xAxis =[]
-    yAxis =[]
-    for dic in dataDictionaryInList:
-        yAxis.append(yAxisForm(dic['name'], dic['data']))
-
-    if stand is not None:
-        for s in stand:
-            for parameters in standParameters:
-                name = str(s)+' Standard - '+clearStandardName(parameters)
-                data = []
-                for oneStand in stand.get(s):
-                    data.append(oneStand[parameters])
-                    if len(data) + xAxisFrom > xAxisTo:
-                        xAxisTo = len(data) + xAxisFrom
-                yAxis.append(yAxisForm(name, data))
-
-    if unit is None:
-        unit = ''
-
-    for i in range(xAxisFrom,xAxisTo+1):
-        xAxis.append('week '+str(i))
-
-    return setChart(chartTitle, xAxis, yAxis,yAxisTitle, yAxisTitle2, unit)
+    while fromNum <= toNum:
+        xAxis.append((str(fromNum)+unit))
+        fromNum += 1
+    return xAxis
 
 def yAxisForm(name,data,visible=True):
     if all(x is None for x in data):
@@ -86,18 +51,65 @@ def yAxisForm(name,data,visible=True):
     else:
         return {'name':name,'data':data,'visible': 'false'}
 
-def setChart(chartTitle,xAxis,yAxis,yAxisTitle,yAxisTitle2,unit):
+def yAxisWithDrilldownForm(name,data,ID):
+#     data = json.dumps(data)
+    return {'name':name,'y':data,'drilldown':str(ID)}
+
+def DrilldownForm(name,data,ID):
+#     data = json.dumps(data)
+    return {'name':name,'data':data,'id':str(ID)}
+
+def setChart(chartTitle,subtitle,xAxis,yAxis,yAxisDrilldown,yAxisTitle,yAxisTitle2,unit):
     axis = {}
+    axis['yAxis'] = yAxis
+    if yAxisDrilldown is not None:
+        axis['yAxisDrilldown'] = yAxisDrilldown
+    axis['title'] = chartTitle
     if xAxis is not None:
         axis['xAxis'] = xAxis
-    if yAxis is not None:
-        axis['yAxis'] = yAxis
     if yAxisTitle is not None:
         axis['yAxis_title'] = yAxisTitle
-    if yAxisTitle2 is not None:
-        axis['yAxis_title2'] = yAxisTitle2
+    else:
+        axis['yAxis_title'] = ''
     if unit is not None:
         axis['unit'] = unit
-    if chartTitle is not None:
-        axis['title'] = chartTitle
+    else:
+        axis['unit'] = ''
+    if yAxisTitle2 is not None:
+        axis['yAxis_title2'] = yAxisTitle2
+    if subtitle is not None:
+        axis['subtitle'] = subtitle
+    else:
+        axis['subtitle'] = ''
     return axis
+
+def drawChart (dataDictionaryInList,chartTitle,subtitle,yAxisTitle,yAxisTitle2,unit,xAxisList):
+    """
+        dataDictionaryInList contain
+            1- name: series name
+            2- data: list of data
+    """
+    yAxis =[]
+    for dic in dataDictionaryInList:
+        yAxis.append(yAxisForm(dic['name'], dic['data']))
+    
+    return setChart(chartTitle,subtitle, xAxisList, yAxis,None,yAxisTitle, yAxisTitle2, unit)
+
+def drawChartWithDrilldown(dataDictionaryInList,chartTitle,subtitle,yAxisTitle,yAxisTitle2,unit,xAxisList):
+    """
+        dataDictionaryInList contain
+            1- name: category name
+            2- value: category value
+            3- data: list of list
+    """
+    yAxis =[]
+    yAxisDrilldown =[]
+    i = 0
+    for dic in dataDictionaryInList:
+        yAxis.append(yAxisWithDrilldownForm(dic['name'], dic['value'],i))
+        print DrilldownForm(dic['name'], dic['data'],i)
+        yAxisDrilldown.append(DrilldownForm(dic['name'], dic['data'],i))
+        i += 1
+    return setChart(chartTitle,subtitle, xAxisList, yAxis,yAxisDrilldown,yAxisTitle, yAxisTitle2, unit)
+
+

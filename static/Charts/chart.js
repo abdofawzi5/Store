@@ -1,6 +1,37 @@
-function rereadVar_switcher(arr,colors,switchEach=null)
+function rereadVar_yAXisDrilldown(arr)
 {
   var out = [];
+  for (var i = 0;i<arr.length;i++)
+  {
+    out.push({
+      name: arr[i].name,
+      // color: colors[i],
+      drilldown: arr[i].drilldown,
+      y: arr[i].y
+    });
+  }
+  return out;
+}
+
+function rereadVar_drilldown(arr)
+{
+  var out = [];
+  for (var i = 0;i<arr.length;i++)
+  {
+    out.push({
+      name: arr[i].name,
+      // color: colors[i],
+      id: arr[i].id,
+      data: arr[i].data
+    });
+  }
+  return out;
+}
+
+function rereadVar(arr,colors,switchEach=null)
+{
+  var out = [];
+  var switchFlag = false;
   for (var i = 0;i<arr.length;i++)
   {
     if (switchEach != null)
@@ -15,7 +46,7 @@ function rereadVar_switcher(arr,colors,switchEach=null)
         }
       }
     }
-    if (switchFlag == true or switchEach == null)
+    if (switchFlag == true || switchEach == null)
     {
     	out.push({
 		    name: arr[i].name,
@@ -38,16 +69,13 @@ function rereadVar_switcher(arr,colors,switchEach=null)
 }
 
 
-function draw_chart(className,axis,chartType,switchEach,floatSize,colors,reverse)
+function draw_chart(className,axis,chartType,switchEach,floatSize,reverse)
 {
-	if( colors  == null )
-	{
-    colors=[
+  var colors=[
       '#800000','#FFA500','#20B2AA','#191970','#BA55D3','#BC8F8F', '#B22222','#FFD700','#ADFF2F','#008080','#0000CD','#DDA0DD','#000000', '#DC143C','#B8860B','#006400',
       '#0000FF','#FF0000','#DAA520','#228B22','#00CED1','#4169E1','#C71585','#FF6347','#EEE8AA','#90EE90','#7FFFD4','#8A2BE2','#FF69B4','#FF7F50','#BDB76B','#8FBC8F',
       '#4682B4','#4B0082','#8B4513','#CD5C5C','#808000','#00FA9A','#6495ED','#6A5ACD','#A0522D','#F08080','#9ACD32','#2E8B57','#1E90FF','#7B68EE','#D2691E','#E9967A',
       '#556B2F','#66CDAA','#ADD8E6','#9370DB','#CD853F','#FF8C00','#6B8E23','#3CB371','#87CEFA','#8B008B','#F4A460'];        
-	}
   if (floatSize == null)
   {
     floatSize=0;
@@ -57,7 +85,7 @@ function draw_chart(className,axis,chartType,switchEach,floatSize,colors,reverse
     reverse = false;
   }
   var yAxisDic ={}
-  if(switchEach = null)
+  if(switchEach == null)
   {
       yAxisDic = {
         opposite: reverse,
@@ -112,7 +140,7 @@ function draw_chart(className,axis,chartType,switchEach,floatSize,colors,reverse
           x: -20
         },
       subtitle: {
-      	text: 'Source: www.abuerdan.com',
+      	text: axis.subtitle,
       	x: -20
       },
       xAxis: {
@@ -133,7 +161,61 @@ function draw_chart(className,axis,chartType,switchEach,floatSize,colors,reverse
       	useHTML: true,
       	valueDecimals:floatSize,
       },
-      series: rereadVar(axis.yAxis,colors)
+      series: rereadVar(axis.yAxis,colors,switchEach)
     });
   });
 }
+
+
+function draw_chart_with_Drilldown(className,axis,floatSize,reverse)
+{
+  $(function () {
+    // Create the chart
+    $(className).highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: axis.title,
+        },
+        subtitle: {
+            text: axis.subtitle
+        },
+        xAxis: {
+            type: 'category'
+        },
+        yAxis: {
+            title: {
+                text: axis.yAxis_title
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        plotOptions: {
+            series: {
+                borderWidth: 0,
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.y:.1f}%'
+                }
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+        },
+        series:  [{
+            name: '',
+            colorByPoint: true,
+            data: axis.yAxis,
+        }]
+        ,
+        drilldown: {
+            series: axis.yAxisDrilldown,
+        }
+    });
+});
+}
+
+

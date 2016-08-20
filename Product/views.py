@@ -3,6 +3,7 @@ from django.db.models import Q
 from django.db.models.functions import Coalesce
 from django.db.models.aggregates import Sum
 from django.db.models.expressions import Case, When
+# from django.db.models import Max, Sum, Avg, Min, Case, When, Q
 from django.db.models.fields import IntegerField
 
 
@@ -41,7 +42,19 @@ def availableImportsIDs(oneLocation):
             importsIDs.append(oneImport['fk_import'])
     return importsIDs
 
-
+def productAndCategoryQuantity(fromDate,toDate):
+    soldQuantity = SalesItems.objects.filter(fk_sales__the_date__gte = fromDate,fk_sales__the_date__lte = toDate).values('fk_import__fk_product__fk_category__name','fk_import__fk_product__name').annotate(qunatity = Coalesce(Sum('quantity'),0))
+    quantityList = []
+    for sales in soldQuantity:
+        found = next((item for item in quantityList if item["category_name"] == sales['fk_import__fk_product__fk_category__name']),False)
+        if found == False:
+            dict = {}
+            dict['category_name'] = sales['fk_import__fk_product__fk_category__name']
+            dict['products'] = [{'product_name':sales['fk_import__fk_product__name'],'quantity':sales['qunatity']}]
+            quantityList.append(dict)
+        else:
+            found['products'].append({'product_name':sales['fk_import__fk_product__name'],'quantity':sales['qunatity']})
+    return quantityList
 
 
 
