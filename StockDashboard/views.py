@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.translation import  ugettext_lazy as _
 from datetime import date, timedelta, datetime
 from Company.views import getAllLocations
-from Product.views import productAndCategoryQuantity
+from Product.views import productAndCategorySoldQuantity, productAndCategoryAvailableQuantity
 from Charts.views import drawChartWithDrilldown
 
 @login_required(login_url='/admin/login/')
@@ -20,12 +20,9 @@ def companyLevelContext(request):
         dateFilter = datetime.strptime(dateFilter, '%Y-%m-%d').date()
     context['dateFilter'] = str(dateFilter)
     context['locations'] = getAllLocations()
-    context['soldQuantityInLast30DaysChart'] = soldQuantityInLast30DaysChart(dateFilter)
+    context['soldQuantityInLast30DaysChart'] = soldQuantityChart(dateFilter - timedelta(30), dateFilter)
+    context['productAvailableQuantityTable'] = productAndCategoryAvailableQuantity()
     return context
-
-
-
-
 
 """
 ********************************************************************************
@@ -33,8 +30,8 @@ def companyLevelContext(request):
 ********************************************************************************
 """
 
-def soldQuantityInLast30DaysChart(dateFilter):
-    totalQuantity = productAndCategoryQuantity(dateFilter - timedelta(30), dateFilter)
+def soldQuantityChart(fromDate,toDate):
+    totalQuantity = productAndCategorySoldQuantity(fromDate,toDate)
     dataDictionaryInList = []
     for oneQuantity in totalQuantity:
         dic = {}

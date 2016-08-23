@@ -78,7 +78,7 @@ class Sales(models.Model):
 
 class SalesItems(models.Model):
     fk_sales = models.ForeignKey(Sales, verbose_name = _('Sales'),related_name = _('Sales'))
-    fk_import = models.ForeignKey(Imports, verbose_name = _('Import'),related_name = _('Import'))
+    fk_import = models.ForeignKey(Imports, verbose_name = _('Import'),related_name = _('SoldImport'))
     quantity = models.IntegerField(default=0,validators = [MinValueValidator(0.0)], verbose_name=_('Quantity'))
     price = models.FloatField(default=0,validators = [MinValueValidator(0.0)] ,verbose_name=_('Price per Item'))
 

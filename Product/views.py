@@ -1,11 +1,10 @@
 from Product.models import Transfers, SalesItems, Imports, Sales
 from django.db.models import Q
 from django.db.models.functions import Coalesce
-from django.db.models.aggregates import Sum
+from django.db.models.aggregates import Sum, Avg
 from django.db.models.expressions import Case, When
-# from django.db.models import Max, Sum, Avg, Min, Case, When, Q
 from django.db.models.fields import IntegerField
-
+from models import Product
 
 def availableQuantityInLocation(fk_import_obj,fk_location_obj):
     availableQuantity = 0
@@ -42,7 +41,7 @@ def availableImportsIDs(oneLocation):
             importsIDs.append(oneImport['fk_import'])
     return importsIDs
 
-def productAndCategoryQuantity(fromDate,toDate):
+def productAndCategorySoldQuantity(fromDate,toDate):
     soldQuantity = SalesItems.objects.filter(fk_sales__the_date__gte = fromDate,fk_sales__the_date__lte = toDate).values('fk_import__fk_product__fk_category__name','fk_import__fk_product__name').annotate(qunatity = Coalesce(Sum('quantity'),0))
     quantityList = []
     for sales in soldQuantity:
@@ -56,5 +55,24 @@ def productAndCategoryQuantity(fromDate,toDate):
             found['products'].append({'product_name':sales['fk_import__fk_product__name'],'quantity':sales['qunatity']})
     return quantityList
 
-
-
+def productAndCategoryAvailableQuantity():
+    productSales = SalesItems.objects.all().values('fk_import__fk_product__name','fk_import__fk_product__fk_category__name').annotate(inQuantity = Coalesce(Avg('fk_import__quantity'),0),outQuantity = Coalesce(Sum('quantity'),0))
+    productCategory = []
+    for sales in productSales:
+        found = next((item for item in productCategory if item["category_name"] == sales['fk_import__fk_product__fk_category__name']),False)
+        if found == False:
+            dict = {}
+            dict['category_name'] = sales['fk_import__fk_product__fk_category__name']
+            dict['products'] = [{'product_name':sales['fk_import__fk_product__name'],'quantity':sales['inQuantity']-sales['outQuantity']}]
+            productCategory.append(dict)
+        else:
+            found['products'].append({'product_name':sales['fk_import__fk_product__name'],'quantity':sales['inQuantity']-sales['outQuantity']})
+    print productCategory
+    return productCategory
+            
+        
+        
+        
+        
+        
+        
