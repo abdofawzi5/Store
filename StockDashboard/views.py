@@ -1,9 +1,10 @@
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
+from django.utils.translation import  ugettext_lazy as _
 from datetime import date, timedelta, datetime
 from Company.views import getAllLocations
 from Product.views import productAndCategoryQuantity
-from Charts.views import drawChart, xAxisListDates, drawChartWithDrilldown
+from Charts.views import drawChartWithDrilldown
 
 @login_required(login_url='/admin/login/')
 def companyLevel(request):
@@ -19,10 +20,20 @@ def companyLevelContext(request):
         dateFilter = datetime.strptime(dateFilter, '%Y-%m-%d').date()
     context['dateFilter'] = str(dateFilter)
     context['locations'] = getAllLocations()
-    context['productQuantitySummeryChart'] = productQuantitySummeryChart(dateFilter)
+    context['soldQuantityInLast30DaysChart'] = soldQuantityInLast30DaysChart(dateFilter)
     return context
 
-def productQuantitySummeryChart(dateFilter):
+
+
+
+
+"""
+********************************************************************************
+********************************* Build Charts *********************************
+********************************************************************************
+"""
+
+def soldQuantityInLast30DaysChart(dateFilter):
     totalQuantity = productAndCategoryQuantity(dateFilter - timedelta(30), dateFilter)
     dataDictionaryInList = []
     for oneQuantity in totalQuantity:
@@ -35,8 +46,7 @@ def productQuantitySummeryChart(dateFilter):
             categoryQuantity += product['quantity']
         dic['value'] = categoryQuantity
         dataDictionaryInList.append(dic)
-    print dataDictionaryInList
-    return drawChartWithDrilldown(dataDictionaryInList, 'Sales Quantity last 30 days',None, None, None, None, None)
+    return drawChartWithDrilldown(dataDictionaryInList,unicode(_('Sold Quantity in last 30 days')),None, None, None, None, None)
 
 
 

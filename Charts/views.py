@@ -81,7 +81,7 @@ def setChart(chartTitle,subtitle,xAxis,yAxis,yAxisDrilldown,yAxisTitle,yAxisTitl
         axis['subtitle'] = subtitle
     else:
         axis['subtitle'] = ''
-    return axis
+    return json.dumps(axis)
 
 def drawChart (dataDictionaryInList,chartTitle,subtitle,yAxisTitle,yAxisTitle2,unit,xAxisList):
     """
@@ -107,7 +107,6 @@ def drawChartWithDrilldown(dataDictionaryInList,chartTitle,subtitle,yAxisTitle,y
     i = 0
     for dic in dataDictionaryInList:
         yAxis.append(yAxisWithDrilldownForm(dic['name'], dic['value'],i))
-        print DrilldownForm(dic['name'], dic['data'],i)
         yAxisDrilldown.append(DrilldownForm(dic['name'], dic['data'],i))
         i += 1
     return setChart(chartTitle,subtitle, xAxisList, yAxis,yAxisDrilldown,yAxisTitle, yAxisTitle2, unit)
