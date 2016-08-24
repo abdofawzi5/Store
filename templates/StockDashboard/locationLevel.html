@@ -4,6 +4,7 @@
 {% block sidebar_menu%}
 {%endblock%}            
 {% block content_header%}
+<li><a href="#">{{location.name}}</a></li>
 {%endblock%}
 {% block main_content%}
 
@@ -19,7 +20,7 @@
       </div><!-- /.box-header -->
       <div class="box-body">
         <div class="row">
-            {% for category in companyAvailableQuantity%}
+            {% for category in locationAvailableQuantity%}
               <div class="col-md-3">
                 <div class="box-body">
                   <table class="table table-bordered table-hover table-striped">

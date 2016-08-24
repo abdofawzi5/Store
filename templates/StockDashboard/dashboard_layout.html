@@ -22,11 +22,10 @@
     <!-- RTL Theme style -->
 <!--     <link href="{% static 'StockDashboard/css/rtl-min.css' %}" rel="stylesheet" type="text/css" />
  -->
+    <!-- Stock Dashboard Style -->
+    <link href="{% static 'StockDashboard/css/stockDashboard.css' %}" rel="stylesheet" type="text/css" />
     {% block import_style%}{%endblock%}
     <style type="text/css">
-      .faicon-size{
-        font-size: 1.5em;text-shadow: 1px 1px 1px #ccc;
-      }
     </style>
   </head>
   <body class="skin-purple sidebar-mini">
@@ -49,38 +48,42 @@
           <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
             <span class="sr-only">Toggle navigation</span>
           </a>
+          <!-- Date Filter Display-->
+          <a href="#" class="sidebar-toggle remove-content" role="button">
+            <span >Date: {{dateFilter}}</span>
+          </a>
           <!-- Navbar Right Menu -->
           <div class="navbar-custom-menu">
 	        <ul class="nav navbar-nav">
-				<!-- Filter: style can be found in dropdown.less -->
-				<li class="dropdown user user-menu">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-					  <i class="fa fa-filter faicon-size"></i>
-					</a>
-					<ul class="dropdown-menu" >
-						<li class="user-header" style="height:110px;">
-							<p>Filter on specific date</p>
-					    	<!-- Date Filter -->
-						    <div class="form-group">
-						        <div class="input-group">
-						          <div class="input-group-addon">
-						            <i class="fa fa-calendar"></i>
-						          </div>
-						          <input type="text" class="dateFilter form-control pull-right" id="dateFilter" style="position: relative; z-index: 100000;" />
-						        </div><!-- /.input group -->
-						    </div><!-- /.form group -->
-					  	</li>
-						<!-- Menu Footer-->
-					    <li class="user-footer">
-						    <div class="pull-left">
-						    	<a href="/" class="btn btn-default btn-flat filter">Filter</a>
-						    </div>
-						    <div class="pull-right">
-						    	<a href="/" class="btn btn-default btn-flat">Go Live</a>
-						    </div>
-						</li>
-					</ul>
-				</li>
+  				<!-- Filter: style can be found in dropdown.less -->
+  				<li class="dropdown user user-menu">
+  					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+  					  <i class="fa fa-filter faicon-size"></i>
+  					</a>
+  					<ul class="dropdown-menu" >
+  						<li class="user-header" style="height:110px;">
+  							<p>Filter on specific date</p>
+  					    	<!-- Date Filter -->
+  						    <div class="form-group">
+  						        <div class="input-group">
+  						          <div class="input-group-addon">
+  						            <i class="fa fa-calendar"></i>
+  						          </div>
+  						          <input type="text" class="dateFilter form-control pull-right" id="dateFilter" style="position: relative; z-index: 100000;" />
+  						        </div><!-- /.input group -->
+  						    </div><!-- /.form group -->
+  					  	</li>
+  						<!-- Menu Footer-->
+  					    <li class="user-footer">
+  						    <div class="pull-left">
+  						    	<a href="/" class="btn btn-default btn-flat filter">Filter</a>
+  						    </div>
+  						    <div class="pull-right">
+  						    	<a href="/" class="btn btn-default btn-flat">Go Live</a>
+  						    </div>
+  						</li>
+  					</ul>
+  				</li>
               <!-- Logout: style can be found in dropdown.less-->
               <li class="dropdown messages-menu">
                 <a href="/admin/logout/?next=/" class="dropdown-toggle">
@@ -110,7 +113,7 @@
       			  </a>
       			  <ul class="treeview-menu">
       			    {% for location in locationType.name%}
-      			    	<li><a href="index.html"><i class="fa fa-circle-o text-aqua"></i>{{location}}</a></li>
+      			    	<li><a href="location?id={{location.id}}&dateFilter={{dateFilter}}"><i class="fa fa-circle-o text-aqua"></i>{{location.name}}</a></li>
       			    {% endfor %}
       			  </ul>
       			</li>
@@ -129,9 +132,8 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
           <!-- <h1>Company Dashboard</h1> -->
-          <ol class="breadcrumb" style="float:left !Important;position:relative; width:100%;height:60px;">
+          <ol class="breadcrumb" style="float:left !Important;position:relative; width:100%;height:60px; font-size:15px;">
             <li><i class="fa fa-dashboard"></i> <a href="/">Home</a></li>
-            <!-- <li class="active"><a href="/">Dashboard</a></li> -->
             {% block content_header%}{%endblock%}
           </ol>
         </section>

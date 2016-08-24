@@ -41,8 +41,11 @@ def availableImportsIDs(oneLocation):
             importsIDs.append(oneImport['fk_import'])
     return importsIDs
 
-def productAndCategorySoldQuantity(fromDate,toDate):
-    soldQuantity = SalesItems.objects.filter(fk_sales__the_date__gte = fromDate,fk_sales__the_date__lte = toDate).values('fk_import__fk_product__fk_category__name','fk_import__fk_product__name').annotate(qunatity = Coalesce(Sum('quantity'),0))
+def productAndCategorySoldQuantity(fromDate,toDate,locationsIDs):
+    soldQuantity = SalesItems.objects.filter(fk_sales__the_date__gte = fromDate,fk_sales__the_date__lte = toDate)
+    if locationsIDs is not None and len(locationsIDs) > 0:
+        soldQuantity = soldQuantity.filter(fk_sales__fk_location__id__in = locationsIDs)
+    soldQuantity = soldQuantity.values('fk_import__fk_product__fk_category__name','fk_import__fk_product__name').annotate(qunatity = Coalesce(Sum('quantity'),0))
     quantityList = []
     for sales in soldQuantity:
         found = next((item for item in quantityList if item["category_name"] == sales['fk_import__fk_product__fk_category__name']),False)
@@ -55,7 +58,7 @@ def productAndCategorySoldQuantity(fromDate,toDate):
             found['products'].append({'product_name':sales['fk_import__fk_product__name'],'quantity':sales['qunatity']})
     return quantityList
 
-def productAndCategoryAvailableQuantity():
+def companyAvailableQuantity():
     productSales = SalesItems.objects.all().values('fk_import__fk_product__name','fk_import__fk_product__fk_category__name').annotate(inQuantity = Coalesce(Avg('fk_import__quantity'),0),outQuantity = Coalesce(Sum('quantity'),0))
     productCategory = []
     for sales in productSales:
@@ -67,6 +70,30 @@ def productAndCategoryAvailableQuantity():
             productCategory.append(dict)
         else:
             found['products'].append({'product_name':sales['fk_import__fk_product__name'],'quantity':sales['inQuantity']-sales['outQuantity']})
+    return productCategory
+            
+def locationAvailableQuantity(locationID):
+    totaltransfers = Transfers.objects.filter(Q(fk_location_from__id = locationID)|Q(fk_location_to__id = locationID)).values('fk_import__fk_product__name','fk_import__fk_product__fk_category__name').annotate(inTransfers = Coalesce(Sum(Case(When(fk_location_to__id = locationID, then='quantity'),output_field=IntegerField())),0) ,outTransfers = Coalesce(Sum(Case(When(fk_location_from__id = locationID, then='quantity'),output_field=IntegerField())),0))
+    totalSales = SalesItems.objects.filter(fk_sales__fk_location = locationID).values('fk_import__fk_product__name','fk_import__fk_product__fk_category__name').annotate(sold = Coalesce(Sum('quantity'),0))
+
+    productCategory = []
+    for transfer in totaltransfers:
+        found = next((item for item in productCategory if item["category_name"] == transfer['fk_import__fk_product__fk_category__name']),False)
+        if found == False:
+            dict = {}
+            dict['category_name'] = transfer['fk_import__fk_product__fk_category__name']
+            productDic = {'product_name':transfer['fk_import__fk_product__name'],'quantity':transfer['inTransfers']-transfer['outTransfers']}
+            dict['products'] = [productDic]
+            for sales in totalSales:
+                if sales['fk_import__fk_product__name'] == productDic['product_name']:
+                    productDic['quantity'] -= sales['sold']
+            productCategory.append(dict)
+        else:
+            productDic = {'product_name':transfer['fk_import__fk_product__name'],'quantity':transfer['inTransfers']-transfer['outTransfers']}
+            for sales in totalSales:
+                if sales['fk_import__fk_product__name'] == productDic['product_name']:
+                    productDic['quantity'] -= sales['sold']            
+            found['products'].append(productDic)
     return productCategory
             
         
