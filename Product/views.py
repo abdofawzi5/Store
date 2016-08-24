@@ -67,7 +67,6 @@ def productAndCategoryAvailableQuantity():
             productCategory.append(dict)
         else:
             found['products'].append({'product_name':sales['fk_import__fk_product__name'],'quantity':sales['inQuantity']-sales['outQuantity']})
-    print productCategory
     return productCategory
             
         

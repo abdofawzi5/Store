@@ -101,20 +101,20 @@
         <section class="sidebar">
           <!-- sidebar menu: : style can be found in sidebar.less -->
           <ul class="sidebar-menu">            
-			<li class="header">Locations</li>
-			{% for locationType in locations %}
-			<li class="active treeview">
-			  <a href="#">
-			    <i class="glyphicon glyphicon-home"></i> <span>{{locationType.type}}</span> <i class="fa fa-angle-left pull-right"></i>
-                <small class="label pull-right bg-green">{{locationType.name|length}}</small>
-			  </a>
-			  <ul class="treeview-menu">
-			    {% for location in locationType.name%}
-			    	<li><a href="index.html"><i class="fa fa-circle-o text-aqua"></i>{{location}}</a></li>
-			    {% endfor %}
-			  </ul>
-			</li>
-			{% endfor %}
+      			<li class="header">Locations</li>
+      			{% for locationType in locations %}
+      			<li class="active treeview">
+      			  <a href="#">
+      			    <i class="glyphicon glyphicon-home"></i> <span>{{locationType.type}}</span> <i class="fa fa-angle-left pull-right"></i>
+                      <small class="label pull-right bg-green">{{locationType.name|length}}</small>
+      			  </a>
+      			  <ul class="treeview-menu">
+      			    {% for location in locationType.name%}
+      			    	<li><a href="index.html"><i class="fa fa-circle-o text-aqua"></i>{{location}}</a></li>
+      			    {% endfor %}
+      			  </ul>
+      			</li>
+      			{% endfor %}
             {% block sidebar_menu%}{%endblock%}
           </ul>
         </section>
@@ -130,8 +130,8 @@
         <section class="content-header">
           <!-- <h1>Company Dashboard</h1> -->
           <ol class="breadcrumb" style="float:left !Important;position:relative; width:100%;height:60px;">
-            <li><i class="fa fa-dashboard"></i> Home</li>
-            <!-- <li class="active">Dashboard</li> -->
+            <li><i class="fa fa-dashboard"></i> <a href="/">Home</a></li>
+            <!-- <li class="active"><a href="/">Dashboard</a></li> -->
             {% block content_header%}{%endblock%}
           </ol>
         </section>

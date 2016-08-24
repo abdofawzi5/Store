@@ -20,7 +20,17 @@ def companyLevelContext(request):
         dateFilter = datetime.strptime(dateFilter, '%Y-%m-%d').date()
     context['dateFilter'] = str(dateFilter)
     context['locations'] = getAllLocations()
-    context['soldQuantityInLast30DaysChart'] = soldQuantityChart(dateFilter - timedelta(30), dateFilter)
+    fromDate = dateFilter.replace(day=1)
+    toDate = dateFilter
+    title = unicode(_("Sold Quantity in "))+str(fromDate.strftime("%B"))+' ' + str(fromDate.strftime("%Y"))
+    context['soldQuantityThisMonthChart'] = soldQuantityChart(title,fromDate, toDate)
+    fromDate = (dateFilter-timedelta(60)).replace(day=1)
+    try:
+        toDate = (dateFilter-timedelta(60)).replace(day=31)
+    except:
+        toDate = (dateFilter-timedelta(60)).replace(day=30)
+    title = unicode(_("Sold Quantity in "))+str(fromDate.strftime("%B"))+' ' + str(fromDate.strftime("%Y"))
+    context['soldQuantityLastMonthChart'] = soldQuantityChart(title,fromDate, toDate)
     context['productAvailableQuantityTable'] = productAndCategoryAvailableQuantity()
     return context
 
@@ -30,7 +40,7 @@ def companyLevelContext(request):
 ********************************************************************************
 """
 
-def soldQuantityChart(fromDate,toDate):
+def soldQuantityChart(chartTitle,fromDate,toDate):
     totalQuantity = productAndCategorySoldQuantity(fromDate,toDate)
     dataDictionaryInList = []
     for oneQuantity in totalQuantity:
@@ -43,7 +53,7 @@ def soldQuantityChart(fromDate,toDate):
             categoryQuantity += product['quantity']
         dic['value'] = categoryQuantity
         dataDictionaryInList.append(dic)
-    return drawChartWithDrilldown(dataDictionaryInList,unicode(_('Sold Quantity in last 30 days')),None, None, None, None, None)
+    return drawChartWithDrilldown(dataDictionaryInList,chartTitle,None, None, None, None, None)
 
 
 
