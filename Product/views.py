@@ -1,10 +1,9 @@
 from Product.models import Transfers, SalesItems, Imports, Sales
 from django.db.models import Q
 from django.db.models.functions import Coalesce
-from django.db.models.aggregates import Sum, Avg
+from django.db.models.aggregates import Sum
 from django.db.models.expressions import Case, When
 from django.db.models.fields import IntegerField
-from models import Product
 
 def availableQuantityInLocation(fk_import_obj,fk_location_obj):
     availableQuantity = 0
@@ -59,17 +58,26 @@ def productAndCategorySoldQuantity(fromDate,toDate,locationsIDs):
     return quantityList
 
 def companyAvailableQuantity(dateFilter):
-    productSales = SalesItems.objects.filter(fk_sales__the_date__lte = dateFilter).values('fk_import__fk_product__name','fk_import__fk_product__fk_category__name').annotate(inQuantity = Coalesce(Avg('fk_import__quantity'),0),outQuantity = Coalesce(Sum('quantity'),0))
+    productImports = Imports.objects.filter(the_date__lte = dateFilter).values('fk_product__name','fk_product__fk_category__name').annotate(inQuantity = Coalesce(Sum('quantity'),0))
+    totalSales = SalesItems.objects.filter(fk_sales__the_date__lte = dateFilter).values('fk_import__fk_product__name','fk_import__fk_product__fk_category__name').annotate(sold = Coalesce(Sum('quantity'),0))
     productCategory = []
-    for sales in productSales:
-        found = next((item for item in productCategory if item["category_name"] == sales['fk_import__fk_product__fk_category__name']),False)
+    for oneImport in productImports:
+        found = next((item for item in productCategory if item["category_name"] == oneImport['fk_product__fk_category__name']),False)
         if found == False:
             dict = {}
-            dict['category_name'] = sales['fk_import__fk_product__fk_category__name']
-            dict['products'] = [{'product_name':sales['fk_import__fk_product__name'],'quantity':sales['inQuantity']-sales['outQuantity']}]
+            dict['category_name'] = oneImport['fk_product__fk_category__name']
+            productDic = {'product_name':oneImport['fk_product__name'],'quantity':oneImport['inQuantity']}
+            dict['products'] = [productDic]
+            for sales in totalSales:
+                if sales['fk_import__fk_product__name'] == productDic['product_name']:
+                    productDic['quantity'] -= sales['sold']          
             productCategory.append(dict)
         else:
-            found['products'].append({'product_name':sales['fk_import__fk_product__name'],'quantity':sales['inQuantity']-sales['outQuantity']})
+            productDic = {'product_name':oneImport['fk_product__name'],'quantity':oneImport['inQuantity']}
+            for sales in totalSales:
+                if sales['fk_import__fk_product__name'] == productDic['product_name']:
+                    productDic['quantity'] -= sales['sold']                      
+            found['products'].append(productDic)
     return productCategory
             
 def locationAvailableQuantity(locationID,dateFilter):

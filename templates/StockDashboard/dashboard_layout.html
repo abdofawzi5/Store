@@ -69,14 +69,14 @@
   						          <div class="input-group-addon">
   						            <i class="fa fa-calendar"></i>
   						          </div>
-  						          <input type="text" class="dateFilter form-control pull-right" id="dateFilter" style="position: relative; z-index: 100000;" />
+  						          <input type="text" class="dateFilter form-control pull-right" id="dateFilter" style="position: relative; z-index: 100000;"/>
   						        </div><!-- /.input group -->
   						    </div><!-- /.form group -->
   					  	</li>
   						<!-- Menu Footer-->
   					    <li class="user-footer">
   						    <div class="pull-left">
-  						    	<a href="/" class="btn btn-default btn-flat filter">Filter</a>
+  						    	<a href="/" class="btn btn-default btn-flat filterButton">Filter</a>
   						    </div>
   						    <div class="pull-right">
   						    	<a href="/" class="btn btn-default btn-flat">Go Live</a>
@@ -133,7 +133,7 @@
         <section class="content-header">
           <!-- <h1>Company Dashboard</h1> -->
           <ol class="breadcrumb" style="float:left !Important;position:relative; width:100%;height:60px; font-size:15px;">
-            <li><i class="fa fa-dashboard"></i> <a href="/">Home</a></li>
+            <li><i class="fa fa-dashboard"></i> <a href="/?dateFilter={{dateFilter}}">Home</a></li>
             {% block content_header%}{%endblock%}
           </ol>
         </section>
@@ -183,11 +183,19 @@
 			inline: true
 			});
 		});
+
 		// update filter link with date picked
 		$( ".dateFilter" ).change(function() {
-			var dateFilterSTR = document.getElementById("dateFilter").value; 
-			$(".filter").attr("href", '/?dateFilter='+dateFilterSTR);
+      var pageURL = window.location.pathname + window.location.search;
+      var dateFilterSTR = document.getElementById("dateFilter").value; 
+      if (pageURL.indexOf("dateFilter") != -1)
+      {
+        $(".filterButton").attr("href", pageURL.replace(/(dateFilter=)[^\&]+/, '$1' + dateFilterSTR));
+      }else{
+        $(".filterButton").attr("href", pageURL + "?dateFilter=" +dateFilterSTR);        
+      }
 		});
+
 	</script>
     {% block import_scripts%}{%endblock%}
   </body>
