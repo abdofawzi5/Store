@@ -31,7 +31,7 @@ def companyLevelContext(request):
         toDate = (dateFilter-timedelta(60)).replace(day=30)
     title = unicode(_("Sold Quantity in "))+str(fromDate.strftime("%B"))+' ' + str(fromDate.strftime("%Y"))
     context['soldQuantityLastMonthChart'] = soldQuantityChart(title,fromDate, toDate,None)
-    context['companyAvailableQuantity'] = companyAvailableQuantity()
+    context['companyAvailableQuantity'] = companyAvailableQuantity(dateFilter)
     return context
 
 @login_required(login_url='/admin/login/')
@@ -60,7 +60,7 @@ def locationLevelContext(request):
         toDate = (dateFilter-timedelta(60)).replace(day=30)
     title = unicode(_("Sold Quantity in "))+str(fromDate.strftime("%B"))+' ' + str(fromDate.strftime("%Y"))
     context['soldQuantityLastMonthChart'] = soldQuantityChart(title,fromDate, toDate,[context['location'].id])
-    context['locationAvailableQuantity'] = locationAvailableQuantity(context['location'].id)
+    context['locationAvailableQuantity'] = locationAvailableQuantity(context['location'].id,dateFilter)
     return context
 
 

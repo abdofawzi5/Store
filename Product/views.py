@@ -58,8 +58,8 @@ def productAndCategorySoldQuantity(fromDate,toDate,locationsIDs):
             found['products'].append({'product_name':sales['fk_import__fk_product__name'],'quantity':sales['qunatity']})
     return quantityList
 
-def companyAvailableQuantity():
-    productSales = SalesItems.objects.all().values('fk_import__fk_product__name','fk_import__fk_product__fk_category__name').annotate(inQuantity = Coalesce(Avg('fk_import__quantity'),0),outQuantity = Coalesce(Sum('quantity'),0))
+def companyAvailableQuantity(dateFilter):
+    productSales = SalesItems.objects.filter(fk_sales__the_date__lte = dateFilter).values('fk_import__fk_product__name','fk_import__fk_product__fk_category__name').annotate(inQuantity = Coalesce(Avg('fk_import__quantity'),0),outQuantity = Coalesce(Sum('quantity'),0))
     productCategory = []
     for sales in productSales:
         found = next((item for item in productCategory if item["category_name"] == sales['fk_import__fk_product__fk_category__name']),False)
@@ -72,9 +72,9 @@ def companyAvailableQuantity():
             found['products'].append({'product_name':sales['fk_import__fk_product__name'],'quantity':sales['inQuantity']-sales['outQuantity']})
     return productCategory
             
-def locationAvailableQuantity(locationID):
-    totaltransfers = Transfers.objects.filter(Q(fk_location_from__id = locationID)|Q(fk_location_to__id = locationID)).values('fk_import__fk_product__name','fk_import__fk_product__fk_category__name').annotate(inTransfers = Coalesce(Sum(Case(When(fk_location_to__id = locationID, then='quantity'),output_field=IntegerField())),0) ,outTransfers = Coalesce(Sum(Case(When(fk_location_from__id = locationID, then='quantity'),output_field=IntegerField())),0))
-    totalSales = SalesItems.objects.filter(fk_sales__fk_location = locationID).values('fk_import__fk_product__name','fk_import__fk_product__fk_category__name').annotate(sold = Coalesce(Sum('quantity'),0))
+def locationAvailableQuantity(locationID,dateFilter):
+    totaltransfers = Transfers.objects.filter(Q(fk_location_from__id = locationID)|Q(fk_location_to__id = locationID),the_date__lte = dateFilter).values('fk_import__fk_product__name','fk_import__fk_product__fk_category__name').annotate(inTransfers = Coalesce(Sum(Case(When(fk_location_to__id = locationID, then='quantity'),output_field=IntegerField())),0) ,outTransfers = Coalesce(Sum(Case(When(fk_location_from__id = locationID, then='quantity'),output_field=IntegerField())),0))
+    totalSales = SalesItems.objects.filter(fk_sales__fk_location = locationID,fk_sales__the_date__lte = dateFilter).values('fk_import__fk_product__name','fk_import__fk_product__fk_category__name').annotate(sold = Coalesce(Sum('quantity'),0))
 
     productCategory = []
     for transfer in totaltransfers:
