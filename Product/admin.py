@@ -143,6 +143,7 @@ class TransfersAdmin(admin.ModelAdmin):
 """
 
 class SalesItemInlineValidation(BaseInlineFormSet):
+
     def clean(self):
         super(SalesItemInlineValidation, self).clean()
         totalQuantity = 0
@@ -155,7 +156,10 @@ class SalesItemInlineValidation(BaseInlineFormSet):
                 if form.cleaned_data['quantity'] == 0:
                     raise ValidationError(_("Can't sell Zero quantity"))
                 fk_import_obj = form.cleaned_data['fk_import']
-                fk_location_obj = (form.cleaned_data['fk_sales']).fk_location
+                try:
+                    fk_location_obj = (form.cleaned_data['fk_sales']).fk_location
+                except:
+                    raise ValidationError(_("Error"))
                 quantity_obj = form.cleaned_data['quantity']
                 price_obj = form.cleaned_data['price']
                 minPrice = float(fk_import_obj.selling_price * (100 - fk_import_obj.discount_rate))/100
@@ -181,7 +185,6 @@ class SalesItemInlineValidation(BaseInlineFormSet):
             raise ValidationError(_("Can't sell Zero quantity"))
              
         self.instance.__total__ = totalQuantity
-
 
 class SalesItemInline(admin.TabularInline):
     model = SalesItems
