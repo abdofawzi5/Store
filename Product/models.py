@@ -3,6 +3,8 @@ from django.utils.translation import  ugettext_lazy as _
 from Company.models import Location
 from datetime import date
 from django.core.validators import MaxValueValidator, MinValueValidator
+import os
+from django.dispatch import receiver
 
 SHORT_NAME_LENGTH = 20
 LONG_NAME_LENGTH = 50
@@ -67,14 +69,49 @@ class Transfers(models.Model):
 class Sales(models.Model):
     fk_location = models.ForeignKey(Location, verbose_name = _('Location'),related_name = _('Location'))
     the_date = models.DateField(default=date.today ,blank=False, verbose_name = _('Date'))
-#     bill = models.ImageField(blank = True, null = True ,upload_to = 'bill/' ,verbose_name = _('bill'))
-    
+    bill = models.FileField(upload_to = 'bills/',editable=False ,verbose_name = _('bill'))
+    #,
     def __unicode__(self):
         return unicode(self.id) +'-'+unicode(self.fk_location)+'('+ unicode(self.the_date)+')'
     
     class Meta:
         verbose_name = _('Sale')
         verbose_name_plural = _('Sales')
+
+    def bill_link(self):
+        if self.bill:
+            return "<a href='%s'>download</a>" % (self.bill.url,)
+        else:
+            return "No attachment"
+    bill_link.allow_tags = True
+
+# These two auto-delete files from filesystem when they are unneeded:
+@receiver(models.signals.post_delete, sender=Sales)
+def auto_delete_file_on_delete(sender, instance, **kwargs):
+    """Deletes file from filesystem
+    when corresponding `Sales` object is deleted.
+    """
+    if instance.bill:
+        if os.path.isfile(instance.bill.path):
+            os.remove(instance.bill.path)
+
+@receiver(models.signals.pre_save, sender=Sales)
+def auto_delete_file_on_change(sender, instance, **kwargs):
+    """Deletes file from filesystem
+    when corresponding `Sales` object is changed.
+    """
+    if not instance.pk:
+        return False
+    try:
+        old_file = Sales.objects.get(pk=instance.pk).bill
+    except:
+        return False
+    if not old_file:
+        return False
+    new_file = instance.bill
+    if not old_file == new_file:
+        if os.path.isfile(old_file.path):
+            os.remove(old_file.path)
 
 class SalesItems(models.Model):
     fk_sales = models.ForeignKey(Sales, verbose_name = _('Sales'),related_name = _('Sales'))

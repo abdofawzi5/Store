@@ -16,7 +16,6 @@ urlpatterns = [
     # Examples:
     # url(r'^$', 'Store.views.home', name='home'),
     url(r'^', include('StockDashboard.urls',namespace="StockDashboard")),
-    
 ] 
 
 # if settings.DEBUG is True:

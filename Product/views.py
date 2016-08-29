@@ -4,6 +4,21 @@ from django.db.models.functions import Coalesce
 from django.db.models.aggregates import Sum
 from django.db.models.expressions import Case, When
 from django.db.models.fields import IntegerField
+from django.core.files import File
+from Store import settings
+import openpyxl
+
+def generateBill(sales):
+    path = settings.MEDIA_ROOT+'bills/temp/'
+    filename = 'bill'+'-'+str(sales.id)+'-'+str(sales.id)+str(sales.the_date.year)+str(sales.the_date.month)+str(sales.the_date.day)+'.xls'
+    wb = openpyxl.load_workbook(settings.MEDIA_ROOT+'bills/base/baseBill.xlsx')
+    sheet = wb.get_sheet_by_name('bill')
+    sheet['A1'].value = 'AAAAAAAAAAAAAAAAAAA'
+    wb.save(path+filename)
+    reopen = open(path+filename, "rb")
+    django_file = File(reopen)
+    return django_file
+    
 
 def availableQuantityInLocation(fk_import_obj,fk_location_obj):
     availableQuantity = 0
