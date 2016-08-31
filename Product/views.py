@@ -5,18 +5,48 @@ from django.db.models.aggregates import Sum
 from django.db.models.expressions import Case, When
 from django.db.models.fields import IntegerField
 from django.core.files import File
+from wkhtmltopdf.views import PDFTemplateResponse
+from wkhtmltopdf.utils import wkhtmltopdf
 from Store import settings
-import openpyxl
+import os, glob
+import subprocess
 
-def generateBill(sales):
-    path = settings.MEDIA_ROOT+'bills/temp/'
-    filename = 'bill'+'-'+str(sales.id)+'-'+str(sales.id)+str(sales.the_date.year)+str(sales.the_date.month)+str(sales.the_date.day)+'.xls'
-    wb = openpyxl.load_workbook(settings.MEDIA_ROOT+'bills/base/baseBill.xlsx')
-    sheet = wb.get_sheet_by_name('bill')
-    sheet['A1'].value = 'AAAAAAAAAAAAAAAAAAA'
-    wb.save(path+filename)
+def getPDF(request, context,template,path,filename,displayInBrowserFlag,landscapeFlag):
+    os.environ["DISPLAY"] = ":0"
+    cmd_options = {}
+#     cmd_options = {'margin-top': 25}
+#     cmd_options['margin-bottom'] = 25
+    if landscapeFlag == True:
+        cmd_options['orientation'] = 'landscape'
+    else:
+        cmd_options['orientation'] = 'portrait'
+    response = PDFTemplateResponse(
+                                    request=request,
+                                    template=template,
+                                    filename=filename,
+                                    context= context,
+                                    show_content_in_browser=displayInBrowserFlag,
+                                    cmd_options=cmd_options,
+                                   )
+    temp_file = response.render_to_temporary_file(template)
+    print template
+    print path,filename
+    print path,filename
+    wkhtmltopdf(pages=[temp_file.name], output=path+filename ,  orientation=cmd_options['orientation'])
+    ## remove tmp files
+    for file in glob.glob("/tmp/wkhtmltopdf*"):
+        os.remove(file) 
+    return response
+
+def generateInvoice(request,sales):
+    path = settings.MEDIA_ROOT+'tmp/'
+    filename = 'bill'+'-'+str(sales.id)+'-'+str(sales.id)+str(sales.the_date.year)+str(sales.the_date.month)+str(sales.the_date.day)+'.pdf'
+    context = {}
+    getPDF(request, context, 'invoice/invoice.html', path, filename, False, True)
     reopen = open(path+filename, "rb")
     django_file = File(reopen)
+
+#     fromXLtoPDF(django_file.name)
     return django_file
     
 

@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from Product.models import ProductCategory,Product,Imports,Transfers,Sales,SalesItems
 from django.contrib import admin
 from django import forms
-from Product.views import availableImports, generateBill
+from Product.views import availableImports, generateInvoice
 from Product.views import availableQuantityInLocation
 from Company.models import Location
 from MyUser.views import availableLocation
@@ -202,7 +202,7 @@ class SalesItemInline(admin.TabularInline):
         return super(SalesItemInline, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
 class SalesAdmin(admin.ModelAdmin): 
-    list_display = ('id','the_date','fk_location','bill_link')
+    list_display = ('id','the_date','fk_location','invoice_link')
     search_fields=['id','the_date','fk_location__name',]
     list_filter = ('fk_location__name','id','the_date',)
     inlines = [SalesItemInline,]
@@ -222,9 +222,9 @@ class SalesAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         obj.save() # save object
-        billFile = generateBill(obj) # generate bill and get file object
-        obj.bill.save(billFile.name,billFile,save=True) # save file 
-        os.remove(billFile.name) # remove temp file
+        invoiceFile = generateInvoice(request,obj) # generate bill and get file object
+        obj.invoice.save(invoiceFile.name,invoiceFile,save=True) # save file 
+        os.remove(invoiceFile.name) # remove temp file
         super(SalesAdmin, self).save_model(request, obj, form, change)
 
 

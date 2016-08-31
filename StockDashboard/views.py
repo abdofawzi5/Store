@@ -89,7 +89,3 @@ def soldQuantityChart(chartTitle,fromDate,toDate,locationsIDs):
 
 
 
-
-
-
-

@@ -69,7 +69,7 @@ class Transfers(models.Model):
 class Sales(models.Model):
     fk_location = models.ForeignKey(Location, verbose_name = _('Location'),related_name = _('Location'))
     the_date = models.DateField(default=date.today ,blank=False, verbose_name = _('Date'))
-    bill = models.FileField(upload_to = 'bills/',editable=False ,verbose_name = _('bill'))
+    invoice = models.FileField(upload_to = 'invoices/',editable=False ,verbose_name = _('invoice'))
     #,
     def __unicode__(self):
         return unicode(self.id) +'-'+unicode(self.fk_location)+'('+ unicode(self.the_date)+')'
@@ -78,12 +78,12 @@ class Sales(models.Model):
         verbose_name = _('Sale')
         verbose_name_plural = _('Sales')
 
-    def bill_link(self):
-        if self.bill:
-            return "<a href='%s'>download</a>" % (self.bill.url,)
+    def invoice_link(self):
+        if self.invoice:
+            return "<a href='%s'>Download invoice</a>" % (self.invoice.url,)
         else:
             return "No attachment"
-    bill_link.allow_tags = True
+    invoice_link.allow_tags = True
 
 # These two auto-delete files from filesystem when they are unneeded:
 @receiver(models.signals.post_delete, sender=Sales)
@@ -91,9 +91,9 @@ def auto_delete_file_on_delete(sender, instance, **kwargs):
     """Deletes file from filesystem
     when corresponding `Sales` object is deleted.
     """
-    if instance.bill:
-        if os.path.isfile(instance.bill.path):
-            os.remove(instance.bill.path)
+    if instance.invoice:
+        if os.path.isfile(instance.invoice.path):
+            os.remove(instance.invoice.path)
 
 @receiver(models.signals.pre_save, sender=Sales)
 def auto_delete_file_on_change(sender, instance, **kwargs):
@@ -103,12 +103,12 @@ def auto_delete_file_on_change(sender, instance, **kwargs):
     if not instance.pk:
         return False
     try:
-        old_file = Sales.objects.get(pk=instance.pk).bill
+        old_file = Sales.objects.get(pk=instance.pk).invoice
     except:
         return False
     if not old_file:
         return False
-    new_file = instance.bill
+    new_file = instance.invoice
     if not old_file == new_file:
         if os.path.isfile(old_file.path):
             os.remove(old_file.path)

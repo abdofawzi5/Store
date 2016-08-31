@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'wkhtmltopdf',
     'Charts',
     'Company',
     'MyUser',
@@ -128,6 +129,9 @@ STATICFILES_DIRS = (
 
 AUTH_USER_MODEL = 'MyUser.User'
 
+#  Xvfb :0 -screen 0 1024x768x16
+# WKHTMLTOPDF_CMD = 'wkhtmltopdf --javascript-delay 4000'
+WKHTMLTOPDF_CMD = 'wkhtmltopdf'
 
 
 
