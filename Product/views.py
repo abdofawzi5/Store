@@ -29,18 +29,17 @@ def getPDF(request, context,template,path,filename,displayInBrowserFlag,landscap
                                     cmd_options=cmd_options,
                                    )
     temp_file = response.render_to_temporary_file(template)
-    print template
-    print path,filename
-    print path,filename
     wkhtmltopdf(pages=[temp_file.name], output=path+filename ,  orientation=cmd_options['orientation'])
     ## remove tmp files
     for file in glob.glob("/tmp/wkhtmltopdf*"):
         os.remove(file) 
     return response
 
-def generateInvoice(request,sales):
+def generateInvoice(request,sales,salesItems):
     path = settings.MEDIA_ROOT+'tmp/'
     filename = 'bill'+'-'+str(sales.id)+'-'+str(sales.id)+str(sales.the_date.year)+str(sales.the_date.month)+str(sales.the_date.day)+'.pdf'
+    print sales
+    print salesItems
     context = {}
     getPDF(request, context, 'invoice/invoice.html', path, filename, False, True)
     reopen = open(path+filename, "rb")

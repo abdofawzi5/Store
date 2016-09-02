@@ -42,7 +42,7 @@ class Location(models.Model):
     createdAt = models.DateField(auto_now_add=True , verbose_name = _('Created At'))
 
     def __unicode__(self):
-        return unicode(self.fk_locationType) + ' - ' + unicode(self.name)
+        return unicode(self.fk_locationType) + '-' + unicode(self.name)
 
     class Meta:
         verbose_name = _('Location')

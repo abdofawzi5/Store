@@ -29,7 +29,7 @@ class Product(models.Model):
     createdAt = models.DateField(auto_now_add=True , verbose_name = _('Created At'))
 
     def __unicode__(self):
-        return unicode(self.fk_category) + ' - ' + unicode(self.name)
+        return unicode(self.fk_category) + '-' + unicode(self.name)
 
     class Meta:
         verbose_name = _('Product')
@@ -44,7 +44,7 @@ class Imports(models.Model):
     the_date = models.DateField(default=date.today ,blank=False, verbose_name = _('Date'))
     
     def __unicode__(self):
-        return unicode(self.id) +' '+unicode(self.fk_product) +'('+ unicode(self.the_date)+')'
+        return str(self.id) +'-'+unicode(self.fk_product) +'-IM'+ str(self.the_date.year)+ str(self.the_date.month)+ str(self.the_date.day)
     
     class Meta:
         verbose_name = _('Import')
@@ -60,7 +60,7 @@ class Transfers(models.Model):
     the_date = models.DateField(default=date.today ,blank=False, verbose_name = _('Date'))
     
     def __unicode__(self):
-        return unicode(self.fk_import) +'('+ unicode(self.the_date)+')'
+        return unicode(self.fk_import) +'-T'+ str(self.the_date.year)+ str(self.the_date.month)+ str(self.the_date.day)
     
     class Meta:
         verbose_name = _('Transfer')
@@ -70,9 +70,9 @@ class Sales(models.Model):
     fk_location = models.ForeignKey(Location, verbose_name = _('Location'),related_name = _('Location'))
     the_date = models.DateField(default=date.today ,blank=False, verbose_name = _('Date'))
     invoice = models.FileField(upload_to = 'invoices/',editable=False ,verbose_name = _('invoice'))
-    #,
+
     def __unicode__(self):
-        return unicode(self.id) +'-'+unicode(self.fk_location)+'('+ unicode(self.the_date)+')'
+        return str(self.id) +'-'+unicode(self.fk_location)+'-S'+ str(self.the_date.year)+ str(self.the_date.month)+ str(self.the_date.day)
     
     class Meta:
         verbose_name = _('Sale')
@@ -88,7 +88,7 @@ class Sales(models.Model):
 # These two auto-delete files from filesystem when they are unneeded:
 @receiver(models.signals.post_delete, sender=Sales)
 def auto_delete_file_on_delete(sender, instance, **kwargs):
-    """Deletes file from filesystem
+    """Deletes file from file system
     when corresponding `Sales` object is deleted.
     """
     if instance.invoice:
@@ -97,7 +97,7 @@ def auto_delete_file_on_delete(sender, instance, **kwargs):
 
 @receiver(models.signals.pre_save, sender=Sales)
 def auto_delete_file_on_change(sender, instance, **kwargs):
-    """Deletes file from filesystem
+    """Deletes file from files ystem
     when corresponding `Sales` object is changed.
     """
     if not instance.pk:
@@ -120,7 +120,7 @@ class SalesItems(models.Model):
     price = models.FloatField(default=0,validators = [MinValueValidator(0.0)] ,verbose_name=_('Price per Item'))
 
     def __unicode__(self):
-        return unicode(self.fk_sales) +'('+ unicode(self.quantity)+')'
+        return unicode(self.fk_sales) +'-Q'+ unicode(self.quantity) +'-P'+ unicode(self.price)
     
     class Meta:
         verbose_name = _('Sales Item')

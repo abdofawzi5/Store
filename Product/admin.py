@@ -35,6 +35,8 @@ class CategoryAdmin(admin.ModelAdmin):
 
 class TransfersInlineValidation(BaseInlineFormSet):
     def clean(self):
+        if any(self.errors):
+            return
         super(TransfersInlineValidation, self).clean()
         totalQuantity = 0
         fk_import_obj = None
@@ -146,6 +148,8 @@ class TransfersAdmin(admin.ModelAdmin):
 class SalesItemInlineValidation(BaseInlineFormSet):
 
     def clean(self):
+        if any(self.errors):
+            return
         super(SalesItemInlineValidation, self).clean()
         totalQuantity = 0
         importQuantity = []
@@ -220,12 +224,18 @@ class SalesAdmin(admin.ModelAdmin):
         # is not super user return sales related to location related to user permission
         return qs.filter(fk_location__in=request.user.fk_locations.all())
 
-    def save_model(self, request, obj, form, change):
-        obj.save() # save object
-        invoiceFile = generateInvoice(request,obj) # generate bill and get file object
+    def save_related(self, request, form, formsets, change):
+        super(SalesAdmin, self).save_related(request, form, formsets, change)
+        obj = form.instance
+        salesItems= []
+        for form in formsets:
+            for salesItem in form.cleaned_data:
+                if salesItem and not salesItem.get('DELETE'):
+                    salesItems.append({'product':salesItem['fk_import'].fk_product,'quantity':salesItem['quantity'],'price':salesItem['price']})
+        invoiceFile = generateInvoice(request, form.instance,salesItems) # generate bill and get file object
         obj.invoice.save(invoiceFile.name,invoiceFile,save=True) # save file 
         os.remove(invoiceFile.name) # remove temp file
-        super(SalesAdmin, self).save_model(request, obj, form, change)
+        obj.save()
 
 
 admin.site.register(ProductCategory, CategoryAdmin)
