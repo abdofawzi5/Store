@@ -70,6 +70,11 @@ class Sales(models.Model):
     fk_location = models.ForeignKey(Location, verbose_name = _('Location'),related_name = _('Location'))
     the_date = models.DateField(default=date.today ,blank=False, verbose_name = _('Date'))
     invoice = models.FileField(upload_to = 'invoices/',editable=False ,verbose_name = _('invoice'))
+    # Client info
+    name = models.CharField(max_length = LONG_NAME_LENGTH, verbose_name = _('Name'))
+    phone = models.CharField(max_length = LONG_NAME_LENGTH, verbose_name = _('Phone'))
+    address = models.CharField(blank = True, null = True,max_length = LONG_NAME_LENGTH, verbose_name = _('Address'))
+    email = models.EmailField(blank = True, null = True,verbose_name = _('Email'))
 
     def __unicode__(self):
         return str(self.id) +'-'+unicode(self.fk_location)+'-S'+ str(self.the_date.year)+ str(self.the_date.month)+ str(self.the_date.day)

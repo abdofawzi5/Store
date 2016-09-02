@@ -1,8 +1,9 @@
+{% load staticfiles %}
 <!doctype html>
 <html>
 <head>
     <meta charset="utf-8">
-    <title>A simple, clean, and responsive HTML invoice template</title>
+    <title></title>
     
     <style>
     .invoice-box{
@@ -28,7 +29,7 @@
         vertical-align:top;
     }
     
-    .invoice-box table tr td:nth-child(2){
+    .invoice-box table tr td{
         text-align:right;
     }
     
@@ -64,7 +65,7 @@
         border-bottom:none;
     }
     
-    .invoice-box table tr.total td:nth-child(2){
+    .invoice-box table tr.total td:nth-child(4){
         border-top:2px solid #eee;
         font-weight:bold;
     }
@@ -92,14 +93,16 @@
                 <td colspan="2">
                     <table>
                         <tr>
-                            <td class="title">
-                                <img src="http://nextstepwebs.com/images/logo.png" style="width:100%; max-width:300px;">
-                            </td>
-                            
+                            <td class="title" style="width:200px;">    
+                                <img src="{{company.logo.url}}" style="width:100%; max-width:200px;">
+                            </td>                            
                             <td>
-                                Invoice #: 123<br>
-                                Created: January 1, 2015<br>
-                                Due: February 1, 2015
+                            	{% if sales.fk_location.address %}
+    	                            {{sales.fk_location.address}}<br>
+	                            {% endif %}
+                            	{% if sales.fk_location.phone %}
+	                                {{sales.fk_location.phone}}<br>
+                                {% endif %}
                             </td>
                         </tr>
                     </table>
@@ -111,86 +114,85 @@
                     <table>
                         <tr>
                             <td>
-                                Next Step Webs, Inc.<br>
-                                12345 Sunny Road<br>
-                                Sunnyville, TX 12345
-                            </td>
-                            
-                            <td>
-                                Acme Corp.<br>
-                                John Doe<br>
-                                john@example.com
+                                Invoice #: {{salesNumber}}<br>
+                                Date: {{sales.the_date}}<br>
                             </td>
                         </tr>
                     </table>
                 </td>
             </tr>
-            
+        </table>
+        <table cellpadding="0" cellspacing="0">
             <tr class="heading">
                 <td>
-                    Payment Method
+                    <div style="float:left;">Product</div>
                 </td>
-                
-                <td>
-                    Check #
-                </td>
-            </tr>
-            
-            <tr class="details">
-                <td>
-                    Check
-                </td>
-                
-                <td>
-                    1000
-                </td>
-            </tr>
-            
-            <tr class="heading">
-                <td>
-                    Item
-                </td>
-                
                 <td>
                     Price
+                </td>             
+                <td>
+                    Quantity
+                </td>
+                <td>
+                    Cost
                 </td>
             </tr>
-            
-            <tr class="item">
-                <td>
-                    Website design
-                </td>
-                
-                <td>
-                    $300.00
-                </td>
-            </tr>
-            
-            <tr class="item">
-                <td>
-                    Hosting (3 months)
-                </td>
-                
-                <td>
-                    $75.00
-                </td>
-            </tr>
-            
-            <tr class="item last">
-                <td>
-                    Domain name (1 year)
-                </td>
-                
-                <td>
-                    $10.00
-                </td>
-            </tr>
-            
+
+			{% for item in salesItems%}            
+	            <tr>
+	                <td style="float:left;">
+	                    {{item.product.name}}
+	                </td>
+	                <td>
+	                    {{item.price}}
+	                </td>
+	                <td>
+	                    {{item.quantity}}
+	                </td>
+	                <td>
+	                    {% widthratio item.price 1 item.quantity %}
+	                </td>
+	            </tr>
+            {% endfor %}
+
             <tr class="total">
                 <td></td>
-                
+                <td></td>
+                <td></td>                
                 <td>
-                   Total: $385.00
+                   Total: {{total}}
+                </td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <table>
+                        {% if sales.name %}
+                        <tr>
+                            <td style="float:left;">Name:</td>
+                            <td style="float:left;">{{sales.name}}</td>
+                        </tr>
+                        {% endif %}
+                        {% if sales.phone %}
+                        <tr>
+                            <td style="float:left;">Phone:</td>
+                            <td style="float:left;">{{sales.phone}}</td>
+                        </tr>
+                        {% endif %}
+                        {% if sales.email %}
+                        <tr>
+                            <td style="float:left;">Email:</td>
+                            <td style="float:left;">{{sales.email}}</td>
+                        </tr>
+                        {% endif %}
+                        {% if sales.address %}
+                        <tr>
+                            <td style="float:left;">Address:</td>
+                            <td style="float:left;">{{sales.address}}</td>
+                        </tr>
+                        {% endif %}
+                    </table>
                 </td>
             </tr>
         </table>

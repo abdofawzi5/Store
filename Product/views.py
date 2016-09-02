@@ -1,4 +1,5 @@
 from Product.models import Transfers, SalesItems, Imports, Sales
+from Company.models import Company 
 from django.db.models import Q
 from django.db.models.functions import Coalesce
 from django.db.models.aggregates import Sum
@@ -9,13 +10,10 @@ from wkhtmltopdf.views import PDFTemplateResponse
 from wkhtmltopdf.utils import wkhtmltopdf
 from Store import settings
 import os, glob
-import subprocess
 
 def getPDF(request, context,template,path,filename,displayInBrowserFlag,landscapeFlag):
     os.environ["DISPLAY"] = ":0"
     cmd_options = {}
-#     cmd_options = {'margin-top': 25}
-#     cmd_options['margin-bottom'] = 25
     if landscapeFlag == True:
         cmd_options['orientation'] = 'landscape'
     else:
@@ -31,21 +29,26 @@ def getPDF(request, context,template,path,filename,displayInBrowserFlag,landscap
     temp_file = response.render_to_temporary_file(template)
     wkhtmltopdf(pages=[temp_file.name], output=path+filename ,  orientation=cmd_options['orientation'])
     ## remove tmp files
-    for file in glob.glob("/tmp/wkhtmltopdf*"):
-        os.remove(file) 
+    for fileName in glob.glob("/tmp/wkhtmltopdf*"):
+        os.remove(fileName) 
     return response
 
 def generateInvoice(request,sales,salesItems):
     path = settings.MEDIA_ROOT+'tmp/'
     filename = 'bill'+'-'+str(sales.id)+'-'+str(sales.id)+str(sales.the_date.year)+str(sales.the_date.month)+str(sales.the_date.day)+'.pdf'
-    print sales
-    print salesItems
-    context = {}
-    getPDF(request, context, 'invoice/invoice.html', path, filename, False, True)
+    context = {'sales':sales}
+    context['salesNumber'] = sales.__unicode__()
+    context['salesItems'] = salesItems
+    try:
+        context['company'] = Company.objects.all()[0]
+    except:
+        context['company'] = None
+    context['total'] = 0
+    for sales in salesItems:
+        context['total'] += sales['price'] * sales['quantity'] 
+    getPDF(request, context, 'invoice/invoice.html', path, filename, False, False)
     reopen = open(path+filename, "rb")
     django_file = File(reopen)
-
-#     fromXLtoPDF(django_file.name)
     return django_file
     
 
@@ -93,10 +96,10 @@ def productAndCategorySoldQuantity(fromDate,toDate,locationsIDs):
     for sales in soldQuantity:
         found = next((item for item in quantityList if item["category_name"] == sales['fk_import__fk_product__fk_category__name']),False)
         if found == False:
-            dict = {}
-            dict['category_name'] = sales['fk_import__fk_product__fk_category__name']
-            dict['products'] = [{'product_name':sales['fk_import__fk_product__name'],'quantity':sales['qunatity']}]
-            quantityList.append(dict)
+            dic = {}
+            dic['category_name'] = sales['fk_import__fk_product__fk_category__name']
+            dic['products'] = [{'product_name':sales['fk_import__fk_product__name'],'quantity':sales['qunatity']}]
+            quantityList.append(dic)
         else:
             found['products'].append({'product_name':sales['fk_import__fk_product__name'],'quantity':sales['qunatity']})
     return quantityList
@@ -108,14 +111,14 @@ def companyAvailableQuantity(dateFilter):
     for oneImport in productImports:
         found = next((item for item in productCategory if item["category_name"] == oneImport['fk_product__fk_category__name']),False)
         if found == False:
-            dict = {}
-            dict['category_name'] = oneImport['fk_product__fk_category__name']
+            dic = {}
+            dic['category_name'] = oneImport['fk_product__fk_category__name']
             productDic = {'product_name':oneImport['fk_product__name'],'quantity':oneImport['inQuantity']}
-            dict['products'] = [productDic]
+            dic['products'] = [productDic]
             for sales in totalSales:
                 if sales['fk_import__fk_product__name'] == productDic['product_name']:
                     productDic['quantity'] -= sales['sold']          
-            productCategory.append(dict)
+            productCategory.append(dic)
         else:
             productDic = {'product_name':oneImport['fk_product__name'],'quantity':oneImport['inQuantity']}
             for sales in totalSales:
@@ -132,14 +135,14 @@ def locationAvailableQuantity(locationID,dateFilter):
     for transfer in totaltransfers:
         found = next((item for item in productCategory if item["category_name"] == transfer['fk_import__fk_product__fk_category__name']),False)
         if found == False:
-            dict = {}
-            dict['category_name'] = transfer['fk_import__fk_product__fk_category__name']
+            dic = {}
+            dic['category_name'] = transfer['fk_import__fk_product__fk_category__name']
             productDic = {'product_name':transfer['fk_import__fk_product__name'],'quantity':transfer['inTransfers']-transfer['outTransfers']}
-            dict['products'] = [productDic]
+            dic['products'] = [productDic]
             for sales in totalSales:
                 if sales['fk_import__fk_product__name'] == productDic['product_name']:
                     productDic['quantity'] -= sales['sold']
-            productCategory.append(dict)
+            productCategory.append(dic)
         else:
             productDic = {'product_name':transfer['fk_import__fk_product__name'],'quantity':transfer['inTransfers']-transfer['outTransfers']}
             for sales in totalSales:

@@ -79,10 +79,10 @@ class ImportsAdmin(admin.ModelAdmin):
         (None, {
             'fields': ('fk_product', 'the_date')
         }),
-        (_('Import Info'), {
+        (_('Import info'), {
             'fields': (('quantity', 'price'),),
         }),
-        (_('Selling Plan'), {
+        (_('Selling plan'), {
             'fields': (('selling_price', 'discount_rate'),),
         }),
     )
@@ -119,7 +119,7 @@ class TransfersAdmin(admin.ModelAdmin):
             'fields': ('fk_import', 'the_date')
         }),
         (_('Location'), {
-            'fields': ('fk_location_from', 'fk_location_to',),
+            'fields': (('fk_location_from', 'fk_location_to'),),
         }),
         (_('Quantity'), {
             'fields': ('quantity',),
@@ -207,8 +207,20 @@ class SalesItemInline(admin.TabularInline):
 
 class SalesAdmin(admin.ModelAdmin): 
     list_display = ('id','the_date','fk_location','invoice_link')
-    search_fields=['id','the_date','fk_location__name',]
+    search_fields=['id','the_date','fk_location__name','name','email']
     list_filter = ('fk_location__name','id','the_date',)
+    
+    fieldsets = (
+        (None, {
+            'fields': ('fk_location', 'the_date')
+        }),
+        (_('Client Information'), {
+            'fields': (('name','phone'), ('address','email')),
+        }),
+    )
+
+    
+    
     inlines = [SalesItemInline,]
 
     def render_change_form(self, request, context, *args, **kwargs):
