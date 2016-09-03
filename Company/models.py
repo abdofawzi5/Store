@@ -15,6 +15,9 @@ class Company(models.Model):
     short_description = models.CharField(blank = True, null = True,max_length = SHORT_TEXT_LENGTH, verbose_name = _('Short Description'))
     long_description = models.CharField(blank = True, null = True,max_length = LONG_TEXT_LENGTH, verbose_name = _('Long Description'))
     Mission = models.CharField(blank = True, null = True,max_length = LONG_TEXT_LENGTH, verbose_name = _('Mission'))
+    phone = models.CharField(max_length = LONG_NAME_LENGTH, verbose_name = _('Phone'))
+    address = models.CharField(max_length = LONG_NAME_LENGTH, verbose_name = _('Address'))
+    email = models.EmailField(blank = True, null = True,verbose_name = _('Email'))
     
     def __unicode__(self):
         return unicode(self.name)
@@ -33,7 +36,6 @@ class LocationType(models.Model):
         verbose_name = _('Location Type')
         verbose_name_plural = _('Location Types')
 
-
 class Location(models.Model):
     fk_locationType = models.ForeignKey(LocationType ,verbose_name = _('Location Type'))
     name = models.CharField(max_length = SHORT_NAME_LENGTH, verbose_name=_('Name'))
@@ -41,9 +43,12 @@ class Location(models.Model):
     description = models.CharField(blank = True, null = True,max_length = SHORT_TEXT_LENGTH, verbose_name = _('Short Description'))
     Mission = models.CharField(blank = True, null = True ,max_length = LONG_TEXT_LENGTH, verbose_name = _('Mission'))
     createdAt = models.DateField(auto_now_add=True , verbose_name = _('Created At'))
+    phone = models.CharField(max_length = LONG_NAME_LENGTH, verbose_name = _('Phone'))
+    address = models.CharField(max_length = LONG_NAME_LENGTH, verbose_name = _('Address'))
+    email = models.EmailField(blank = True, null = True,verbose_name = _('Email'))
 
     def __unicode__(self):
-        return unicode(self.fk_locationType) + ' - ' + unicode(self.name)
+        return unicode(self.fk_locationType) + '-' + unicode(self.name)
 
     class Meta:
         verbose_name = _('Location')

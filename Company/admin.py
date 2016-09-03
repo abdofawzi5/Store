@@ -31,7 +31,7 @@ class companyAdmin(admin.ModelAdmin):
 
 class locatioInline(admin.TabularInline):
     model=models.Location
-    fields = ('name','fk_locationType','description','Mission')
+    fields = ('name','fk_locationType','description','Mission','address','phone','email')
     extra = 0
 
 class locationTypeAdmin(admin.ModelAdmin):

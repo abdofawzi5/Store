@@ -37,9 +37,12 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'wkhtmltopdf',
+    'Charts',
     'Company',
     'MyUser',
     'Product',
+    'StockDashboard',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -58,7 +61,7 @@ ROOT_URLCONF = 'Store.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR+'/templates/',True],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -66,6 +69,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+#                 'django.template.context_processors.i18n',
             ],
         },
     },
@@ -125,6 +129,9 @@ STATICFILES_DIRS = (
 
 AUTH_USER_MODEL = 'MyUser.User'
 
+#  Xvfb :0 -screen 0 1024x768x16
+# WKHTMLTOPDF_CMD = 'wkhtmltopdf --javascript-delay 4000'
+WKHTMLTOPDF_CMD = 'wkhtmltopdf'
 
 
 
