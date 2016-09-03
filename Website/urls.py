@@ -3,5 +3,6 @@ from Website import views
 
 urlpatterns = (    
     url(r'^$',views.index),
-    #url(r'^index$',views.view),
+    url(r'^products',views.products),
+    url(r'^contact',views.contanct),
 )
