@@ -93,8 +93,12 @@
                 <td colspan="2">
                     <table>
                         <tr>
-                            <td class="title" style="width:200px;">    
+                            <td class="title" style="width:200px;">
+                            	{% if company.logo %}
                                 <img src="{{company.logo.url}}" style="width:100%; max-width:200px;">
+                            	{% else %}
+                            	<div style="float:left;font-size:25px;">{{company.name}}</div>
+                            	{% endif %}
                             </td>                            
                             <td>
                             	{% if sales.fk_location.address %}
