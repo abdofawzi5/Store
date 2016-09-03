@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'MyUser',
     'Product',
     'StockDashboard',
+    'Website',
 )
 
 MIDDLEWARE_CLASSES = (
