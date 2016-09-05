@@ -1,7 +1,10 @@
 {% extends "website/website_layout.html" %}
+{% load staticfiles %}
+
 {%block title%}| Product{%endblock%}
 
 {%block main_containt%}
+
     <!-- Page Content -->
     <div class="container">
 
@@ -10,28 +13,36 @@
             <div class="col-lg-12">
                 <h2 class="page-header">Welcome to {{company.name}}</h2>
             </div>
-            <div class="col-md-12">
-                <p>The Modern Business template by Start Bootstrap includes:</p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis, omnis doloremque non cum id reprehenderit, quisquam totam aspernatur tempora minima unde aliquid ea culpa sunt. Reiciendis quia dolorum ducimus unde.</p>
+            {% if company.logo %}
+                <div class="col-md-6">
+            {%else%}
+                <div class="col-md-12">
+            {% endif %}
+                <p>{{company.long_description}}</p>
             </div>
+            {% if company.logo %}
+                <div class="col-md-6">
+                    <img class="img-responsive" src="{{company.logo.url}}" style="width:700px;height:450px;margin-left:auto;margin-right:auto;">
+                </div>
+            {% endif %}
         </div>
         <!-- /.row -->
         <br><br><br><br>
 
         <!-- Marketing Icons Section -->
         <div class="row">
-
-            <div class="col-md-4">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4><i class="fa fa-fw fa-check"></i> Bootstrap v3.3.7</h4>
-                    </div>
-                    <div class="panel-body">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque, optio corporis quae nulla aspernatur in alias at numquam rerum ea excepturi expedita tenetur assumenda voluptatibus eveniet incidunt dicta nostrum quod?</p>
+            {% for post in posts %}
+                <div class="col-md-3">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4>{{post.title}}</h4>
+                        </div>
+                        <div class="panel-body">
+                            <p>{{post.detail}}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
+            {% endfor %}
         </div>
         <!-- /.row -->
 

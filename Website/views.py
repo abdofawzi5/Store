@@ -1,12 +1,14 @@
 from django.shortcuts import render
 from Company.models import Company
-from Website.models import Message, Advertisement
+from Website.models import Message, Advertisement, Post
 from Product.views import allProductWithCategory
 import json 
 
 def index(request):
     context = {}
     context['company'] = Company.objects.all()[0]
+    context['ads'] = Advertisement.objects.all()
+    context['posts'] = Post.objects.all()
     return render(request, 'website/index.html',context)
 
 def products(request):
