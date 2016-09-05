@@ -18,6 +18,7 @@ class Company(models.Model):
     phone = models.CharField(max_length = LONG_NAME_LENGTH, verbose_name = _('Phone'))
     address = models.CharField(max_length = LONG_NAME_LENGTH, verbose_name = _('Address'))
     email = models.EmailField(blank = True, null = True,verbose_name = _('Email'))
+    facebook = models.URLField(blank = True, null = True,verbose_name = _('Facebook'))
     
     def __unicode__(self):
         return unicode(self.name)
