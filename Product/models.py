@@ -27,7 +27,7 @@ class Product(models.Model):
     description = models.CharField(blank = True, null = True,max_length = LONG_TEXT_LENGTH, verbose_name = _('Description'))
     fk_category = models.ForeignKey(ProductCategory, verbose_name=_('Category'))
     createdAt = models.DateField(auto_now_add=True , verbose_name = _('Created At'))
-
+    displayFlag = models.BooleanField(default=True, verbose_name = _('Display to users in WebSite'))
     def __unicode__(self):
         return unicode(self.fk_category) + '-' + unicode(self.name)
 

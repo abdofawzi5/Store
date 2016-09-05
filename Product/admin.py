@@ -18,7 +18,7 @@ import os
 
 class ProductInline(admin.TabularInline):   
     model = Product 
-    fields=('name',  'description','photo','fk_category')
+    fields=('name',  'description','photo','fk_category','displayFlag')
     extra = 0
 
 class CategoryAdmin(admin.ModelAdmin):   

@@ -22,3 +22,14 @@ class Message(models.Model):
     class Meta:
         verbose_name = _('Message')
         verbose_name_plural = _('Messages')
+
+class Advertisement(models.Model):
+    name = models.CharField(max_length = SHORT_NAME_LENGTH, verbose_name = _('Name'))
+    photo = models.ImageField(upload_to = 'Advertisement/' ,verbose_name = _('photo'),help_text = _('800x300'))
+
+    def __unicode__(self):
+        return unicode(self.name)
+
+    class Meta:
+        verbose_name = _('advertisement')
+        verbose_name_plural = _('Advertisements')

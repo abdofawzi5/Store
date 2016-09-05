@@ -1,4 +1,4 @@
-from Product.models import Transfers, SalesItems, Imports, Sales
+from Product.models import Transfers, SalesItems, Imports, Sales , Product
 from Company.models import Company 
 from django.db.models import Q
 from django.db.models.functions import Coalesce
@@ -50,8 +50,21 @@ def generateInvoice(request,sales,salesItems):
     reopen = open(path+filename, "rb")
     django_file = File(reopen)
     return django_file
-    
 
+def allProductWithCategory():
+    products = Product.objects.filter(displayFlag = True).select_related('fk_category')
+    categories = []
+    for product in products:
+        found = next((item for item in categories if item["category"].name == product.fk_category.name),False)
+        if found == False:
+            dic = {}
+            dic['category'] = product.fk_category
+            dic['products'] = [product]
+            categories.append(dic)
+        else:
+            found['products'].append(product)
+    return categories
+        
 def availableQuantityInLocation(fk_import_obj,fk_location_obj):
     availableQuantity = 0
     totalTransferred = Transfers.objects.filter(Q(fk_location_from = fk_location_obj)|Q(fk_location_to = fk_location_obj),fk_import=fk_import_obj).aggregate(inTransfers = Coalesce(Sum(Case(When(fk_location_to = fk_location_obj, then='quantity'),output_field=IntegerField())),0) ,outTransfers = Coalesce(Sum(Case(When(fk_location_from = fk_location_obj, then='quantity'),output_field=IntegerField())),0))

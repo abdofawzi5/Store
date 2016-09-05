@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.translation import  ugettext_lazy as _
-from Website.models import Message
+from Website.models import Message, Advertisement
 
 class MessageAdmin(admin.ModelAdmin):    
     list_display = ('the_date','name', 'email','phone',)
@@ -22,4 +22,9 @@ class MessageAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
 
+class AdvertisementAdmin(admin.ModelAdmin):
+    list_display = ('name', 'photo',)
+    
+
 admin.site.register(Message,MessageAdmin)
+admin.site.register(Advertisement,AdvertisementAdmin)
