@@ -1,0 +1,329 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-10 18:00+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#: Company/models.py:12
+msgid "Company Name"
+msgstr "اسم الشركه"
+
+#: Company/models.py:13
+msgid "Logo"
+msgstr "الشعار"
+
+#: Company/models.py:14
+msgid "Slogan"
+msgstr "وصف الشعار"
+
+#: Company/models.py:15 Company/models.py:44
+msgid "Short Description"
+msgstr "وصف مختصر"
+
+#: Company/models.py:16
+msgid "Long Description"
+msgstr "وصف بالتفاصيل"
+
+#: Company/models.py:17 Company/models.py:45
+msgid "Mission"
+msgstr "أهداف"
+
+#: Company/models.py:18 Company/models.py:47 Product/models.py:75
+#: Website/models.py:15
+msgid "Phone"
+msgstr "الهاتف"
+
+#: Company/models.py:19 Company/models.py:48 Product/models.py:76
+msgid "Address"
+msgstr "عنوان"
+
+#: Company/models.py:20 Company/models.py:49 Product/models.py:77
+#: Website/models.py:14
+msgid "Email"
+msgstr "بؤيد ألكترونى"
+
+#: Company/models.py:21
+msgid "Facebook"
+msgstr "فيسبوك"
+
+#: Company/models.py:27
+msgid "Company"
+msgstr "الشركه"
+
+#: Company/models.py:28
+msgid "Companies"
+msgstr "الشركات"
+
+#: Company/models.py:31 Company/models.py:37 Company/models.py:41
+msgid "Location Type"
+msgstr "نوع المكان"
+
+#: Company/models.py:38
+msgid "Location Types"
+msgstr "أنواع الأماكن"
+
+#: Company/models.py:42 Product/models.py:74 Website/models.py:13
+#: Website/models.py:27
+msgid "Name"
+msgstr "الأسم"
+
+#: Company/models.py:43 Product/models.py:26 Website/models.py:28
+msgid "photo"
+msgstr "الهاتف"
+
+#: Company/models.py:46 Product/models.py:29
+msgid "Created At"
+msgstr ""
+
+#: Company/models.py:55 Product/admin.py:121 Product/models.py:70
+msgid "Location"
+msgstr "المكان"
+
+#: Company/models.py:56
+msgid "Locations"
+msgstr "الأماكن"
+
+#: MyUser/admin.py:9
+msgid "Personal info"
+msgstr "معولمات شخصيه"
+
+#: MyUser/admin.py:10
+msgid "Permissions"
+msgstr "الصلحيات"
+
+#: MyUser/models.py:7
+msgid "access Location"
+msgstr "الأماكن المسموحه"
+
+#: MyUser/models.py:7
+msgid "accessLocation"
+msgstr "الأماكن المسموحه"
+
+#: MyUser/models.py:7
+msgid "Locations can access and edit"
+msgstr "الأماكن المسموح ان يقوم بتعديل عليها"
+
+#: Product/admin.py:49 Product/admin.py:106
+msgid "Can't transfer Zero quantity"
+msgstr "لا يمكن نقل صفر كميه"
+
+#: Product/admin.py:55
+msgid "Enter Location and Quantity"
+msgstr "أدخل المكان والكميه"
+
+#: Product/admin.py:58
+msgid "Quantity to transfer is more than imported"
+msgstr "الكميه المنقوله اكبر من الوارده"
+
+#: Product/admin.py:82
+msgid "Import info"
+msgstr "بينات الواردات"
+
+#: Product/admin.py:85
+msgid "Selling plan"
+msgstr "خطه البيع"
+
+#: Product/admin.py:109
+msgid "This Quantity is not Available, Available Quantity = "
+msgstr "هذه الكميه غير متوفره, الكميه المتوفره = "
+
+#: Product/admin.py:124 Product/models.py:40 Product/models.py:59
+#: Product/models.py:124
+msgid "Quantity"
+msgstr "الكيمه"
+
+#: Product/admin.py:162 Product/admin.py:190
+msgid "Can't sell Zero quantity"
+msgstr "لا يمكنك بيع صفر كميه"
+
+#: Product/admin.py:167
+msgid "Error"
+msgstr "خطأ"
+
+#: Product/admin.py:172
+msgid "Can't sale less than "
+msgstr "لا يمكن بيع اقل من "
+
+#: Product/admin.py:184
+msgid "Quantity more than imported for "
+msgstr "الكميه اكبر من الواردات لـ"
+
+#: Product/admin.py:186
+msgid " Available Quantity is "
+msgstr "الكميه المتوفره هى "
+
+#: Product/admin.py:217
+msgid "Client Information"
+msgstr "معلومات العميل "
+
+#: Product/models.py:15 Product/models.py:28
+msgid "Category"
+msgstr "الفئه"
+
+#: Product/models.py:21
+msgid "Product Category"
+msgstr "فئه المنتج"
+
+#: Product/models.py:22
+msgid "Product Categories"
+msgstr "فئه المنتجات"
+
+#: Product/models.py:25
+msgid "Product Name"
+msgstr "أسم المنتج"
+
+#: Product/models.py:27
+msgid "Description"
+msgstr "الوصف"
+
+#: Product/models.py:30
+msgid "Display to users in WebSite"
+msgstr "أظهار فى موقع المستخدمين"
+
+#: Product/models.py:35 Product/models.py:39
+msgid "Product"
+msgstr "المنتج"
+
+#: Product/models.py:36
+msgid "Products"
+msgstr "المنتجات"
+
+#: Product/models.py:41
+msgid "Total Price"
+msgstr "السعر الكلى"
+
+#: Product/models.py:42
+msgid "Selling Price per Item"
+msgstr "سعر بيع القطعه الواحده"
+
+#: Product/models.py:43
+msgid "Discount Rate"
+msgstr "خصم"
+
+#: Product/models.py:44 Product/models.py:60 Product/models.py:71
+msgid "Date"
+msgstr "التاريخ"
+
+#: Product/models.py:50 Product/models.py:123
+msgid "Import"
+msgstr "الوارد"
+
+#: Product/models.py:51 Product/models.py:56
+msgid "Imports"
+msgstr "الواردات"
+
+#: Product/models.py:57
+msgid "Transfer From"
+msgstr "نقل من"
+
+#: Product/models.py:57
+msgid "TransferFrom"
+msgstr "نقل من"
+
+#: Product/models.py:58
+msgid "Transfer To"
+msgstr "نقل الى"
+
+#: Product/models.py:58
+msgid "TransferTo"
+msgstr "نقل الى"
+
+#: Product/models.py:66
+msgid "Transfer"
+msgstr "التحويل"
+
+#: Product/models.py:67
+msgid "Transfers"
+msgstr "التحويلات"
+
+#: Product/models.py:72
+msgid "invoice"
+msgstr "الفتوره"
+
+#: Product/models.py:83
+msgid "Sale"
+msgstr "البيع"
+
+#: Product/models.py:84 Product/models.py:122
+msgid "Sales"
+msgstr "المبيعات"
+
+#: Product/models.py:123
+msgid "SoldImport"
+msgstr ""
+
+#: Product/models.py:125
+msgid "Price per Item"
+msgstr "السعر للمنتج الواحد"
+
+#: Product/models.py:131
+msgid "Sales Item"
+msgstr "المنتج"
+
+#: Product/models.py:132
+msgid "Sales Items"
+msgstr "المنتجات"
+
+#: StockDashboard/views.py:25 StockDashboard/views.py:32
+#: StockDashboard/views.py:54 StockDashboard/views.py:61
+msgid "Sold Quantity in "
+msgstr "الكميه المباعه فى "
+
+#: Website/admin.py:15
+msgid "From"
+msgstr "من"
+
+#: Website/admin.py:18 Website/models.py:16 Website/models.py:23
+msgid "Message"
+msgstr "الرساله"
+
+#: Website/models.py:17 Website/models.py:40
+msgid "Date and Time"
+msgstr "التاريخ والوقت"
+
+#: Website/models.py:24
+msgid "Messages"
+msgstr "الرسائل"
+
+#: Website/models.py:28
+msgid "800x300"
+msgstr ""
+
+#: Website/models.py:34
+msgid "advertisement"
+msgstr "اعلان"
+
+#: Website/models.py:35
+msgid "Advertisements"
+msgstr "الاعلانات"
+
+#: Website/models.py:38
+msgid "Title"
+msgstr "العنوان"
+
+#: Website/models.py:39
+msgid "Detail"
+msgstr "تفاصيل"
+
+#: Website/models.py:46
+msgid "Post"
+msgstr "منشور"
+
+#: Website/models.py:47
+msgid "Posts"
+msgstr "منشورات"

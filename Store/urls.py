@@ -2,8 +2,9 @@ from django.conf.urls import include, url, patterns
 from django.contrib import admin
 from django.conf.urls.static import static
 from Store import settings,views
+from django.conf.urls.i18n import i18n_patterns
 
-urlpatterns = [
+urlpatterns = i18n_patterns(
     # Admin URL
     url(r'^admin/', include(admin.site.urls)),
     # to protect require login in media
@@ -17,7 +18,7 @@ urlpatterns = [
     # url(r'^$', 'Store.views.home', name='home'),
     url(r'^dashboard/', include('StockDashboard.urls',namespace="StockDashboard")),
     url(r'^', include('Website.urls',namespace="StockDashboard")),
-] 
+)
 
 # if settings.DEBUG is True:
 #     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

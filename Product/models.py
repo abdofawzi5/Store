@@ -36,7 +36,7 @@ class Product(models.Model):
         verbose_name_plural = _('Products')
 
 class Imports(models.Model):
-    fk_product = models.ForeignKey(Product, verbose_name = _('Product Product'),related_name = _('Product'))
+    fk_product = models.ForeignKey(Product, verbose_name = _('Product'),related_name = _('Product'))
     quantity = models.IntegerField(default=0,validators = [MinValueValidator(0)], verbose_name=_('Quantity'))
     price = models.FloatField(blank=True,null=True,validators = [MinValueValidator(0.0)],default=0 ,verbose_name=_('Total Price'))
     selling_price = models.FloatField(default=0,validators = [MinValueValidator(0.0)] ,verbose_name=_('Selling Price per Item')) 
