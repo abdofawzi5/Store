@@ -211,7 +211,11 @@ class SalesItemInline(admin.TabularInline):
             # get locations can user access
             all_locations = availableLocation(request)
             # show imports that has quantity
-            kwargs['queryset'] = Imports.objects.filter(id__in = availableImports(all_locations))
+            importsIDs = availableImports(all_locations)
+            sales_imports =  request.sales.Sales.all()
+            for i in sales_imports:
+                importsIDs.append(i.fk_import.id)
+            kwargs['queryset'] = Imports.objects.filter(id__in = importsIDs)
         return super(SalesItemInline, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
 class SalesAdmin(admin.ModelAdmin): 
@@ -227,10 +231,13 @@ class SalesAdmin(admin.ModelAdmin):
             'fields': (('name','phone'), ('address','email')),
         }),
     )
-
-    
     
     inlines = [SalesItemInline,]
+    
+    def get_form(self, request, obj=None, **kwargs):
+        # just save obj reference for future processing in Inline
+        request.sales = obj
+        return super(SalesAdmin, self).get_form(request, obj, **kwargs)
 
     def render_change_form(self, request, context, *args, **kwargs):
         # limit choices of location with location can user access
