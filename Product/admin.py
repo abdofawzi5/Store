@@ -179,22 +179,14 @@ class SalesItemInlineValidation(BaseInlineFormSet):
                 minPrice = float(fk_import_obj.selling_price * (100 - fk_import_obj.discount_rate))/100
                 if minPrice > price_obj:
                     raise ValidationError(_("Can't sale less than ") + unicode(minPrice))
-                found = False
-                for oneImport in importQuantity:
-                    if oneImport['fk_import'] == fk_import_obj:
-                        found = True
-                        oneImport['quantity'] += quantity_obj
-                if found == False:
-                    oneImportQuantity = {'fk_import':fk_import_obj,'quantity':quantity_obj,'availableQuantity':availableQuantityInLocation(fk_import_obj, fk_location_obj)}
-                    importQuantity.append(oneImportQuantity)
-        # to check quantity is less than imported
-        for oneImport in importQuantity:
-            if oneImport['availableQuantity'] < oneImport['quantity']:
-                errorMsg = unicode(_('Quantity more than imported for '))
-                errorMsg += unicode(oneImport['fk_import'].fk_product.__unicode__())
-                errorMsg += unicode(_(' Available Quantity is '))
-                errorMsg += unicode(oneImport['availableQuantity'])
-                raise ValidationError(errorMsg)
+                availableQuantity = availableQuantityInLocation(fk_import_obj, fk_location_obj)
+                availableQuantity += form.cleaned_data['id'].quantity
+                if availableQuantity < quantity_obj:
+                    errorMsg = unicode(_('Quantity more than imported for '))
+                    errorMsg += unicode(form.cleaned_data['fk_import'].fk_product.__unicode__())
+                    errorMsg += unicode(_(' Available Quantity is '))
+                    errorMsg += str(availableQuantity)
+                    raise ValidationError(errorMsg)
         if totalQuantity <= 0:
             raise ValidationError(_("Can't sell Zero quantity"))
              

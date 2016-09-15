@@ -130,4 +130,4 @@ class SalesItems(models.Model):
     class Meta:
         verbose_name = _('Sales Item')
         verbose_name_plural = _('Sales Items')
-    
+        unique_together = ('fk_sales', 'fk_import',)
