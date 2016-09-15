@@ -101,12 +101,16 @@ class TransfersForm(forms.ModelForm):
         exclude = 0
     
     def clean(self):
+        if any(self.errors):
+            return 
         fk_import_obj = self.cleaned_data.get('fk_import')
         fk_location_from_obj = self.cleaned_data.get('fk_location_from')
         quantity_obj = self.cleaned_data.get('quantity')
         if quantity_obj == 0:
             raise ValidationError(_("Can't transfer Zero quantity"))
         availableQuantity = availableQuantityInLocation(fk_import_obj, fk_location_from_obj)
+        if self.instance:
+            availableQuantity += self.instance.quantity
         if availableQuantity < quantity_obj:
             raise forms.ValidationError(_("This Quantity is not Available, Available Quantity = ") + unicode(availableQuantity))
         return self.cleaned_data
@@ -138,7 +142,10 @@ class TransfersAdmin(admin.ModelAdmin):
         # get locations can user access
         all_locations = availableLocation(request)
         # show imports that has quantity
-        context['adminform'].form.fields['fk_import'].queryset = Imports.objects.filter(id__in = availableImports(all_locations))
+        importsIDs = availableImports(all_locations)
+        if context['original'] and context['original'].id:
+            importsIDs.append(context['original'].fk_import.id)
+        context['adminform'].form.fields['fk_import'].queryset = Imports.objects.filter(id__in = importsIDs)
         return super(TransfersAdmin, self).render_change_form(request, context, args, kwargs)             
 
 """
