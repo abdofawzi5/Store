@@ -44,6 +44,8 @@ class TransfersInlineValidation(BaseInlineFormSet):
             if not form.is_valid():
                 return #other errors exist, so don't bother
             if form.cleaned_data and not form.cleaned_data.get('DELETE'):
+                if form.cleaned_data['the_date'] < self.instance.the_date:    
+                    raise ValidationError(_("Transfer Date can't be less than import Date"))
                 totalQuantity += form.cleaned_data['quantity']
                 if form.cleaned_data['quantity'] == 0:
                     raise ValidationError(_("Can't transfer Zero quantity"))
