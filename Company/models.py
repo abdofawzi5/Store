@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import  ugettext_lazy as _
 
-SHORT_NAME_LENGTH = 20
+SHORT_NAME_LENGTH = 40
 LONG_NAME_LENGTH = 50
 SHORT_TEXT_LENGTH = 100
 LONG_TEXT_LENGTH = 800

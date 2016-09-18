@@ -180,7 +180,8 @@ class SalesItemInlineValidation(BaseInlineFormSet):
                 if minPrice > price_obj:
                     raise ValidationError(_("Can't sale less than ") + unicode(minPrice))
                 availableQuantity = availableQuantityInLocation(fk_import_obj, fk_location_obj)
-                availableQuantity += form.cleaned_data['id'].quantity
+                if form.cleaned_data['id']:
+                    availableQuantity += form.cleaned_data['id'].quantity
                 if availableQuantity < quantity_obj:
                     errorMsg = unicode(_('Quantity more than imported for '))
                     errorMsg += unicode(form.cleaned_data['fk_import'].fk_product.__unicode__())
@@ -204,9 +205,10 @@ class SalesItemInline(admin.TabularInline):
             all_locations = availableLocation(request)
             # show imports that has quantity
             importsIDs = availableImports(all_locations)
-            sales_imports =  request.sales.Sales.all()
-            for i in sales_imports:
-                importsIDs.append(i.fk_import.id)
+            if request.sales:
+                sales_imports =  request.sales.Sales.all()
+                for i in sales_imports:
+                    importsIDs.append(i.fk_import.id)
             kwargs['queryset'] = Imports.objects.filter(id__in = importsIDs)
         return super(SalesItemInline, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
