@@ -10,15 +10,14 @@ urlpatterns = i18n_patterns(
     # to protect require login in media
     url(r'^media/(?P<filename>.*)', views.protected_media),
     
-    # Translation
-#     url(r'^jsi18n/$', javascript_catalog, js_info_dict),
-#     url(r'^i18n/', include('django.conf.urls.i18n')),
-
     # Examples:
     # url(r'^$', 'Store.views.home', name='home'),
     url(r'^dashboard/', include('StockDashboard.urls',namespace="StockDashboard")),
     url(r'^', include('Website.urls',namespace="StockDashboard")),
 )
-
+urlpatterns += [
+    url(r'^i18n/', include('django.conf.urls.i18n')),
+#     url(r'^jsi18n/(?P<packages>\S+?)/$', 'django.views.i18n.javascript_catalog'),
+]
 # if settings.DEBUG is True:
 #     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
