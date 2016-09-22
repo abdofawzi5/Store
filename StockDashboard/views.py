@@ -91,7 +91,6 @@ def importsDetailsContext(request):
     for oneImport in last3monthImports:
         if oneImport['id'] not in availableImportsIDs:
             last3monthImportsList.append(oneImport['id'])
-
     context['last3monthImports'] = importsDetailByIDs(last3monthImportsList,dateFilter)
     
     return context
