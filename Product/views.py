@@ -66,22 +66,22 @@ def allProductWithCategory():
             found['products'].append(product)
     return categories
         
-def availableQuantityInLocation(fk_import_obj,fk_location_obj):
+def availableQuantityInLocation(fk_import_obj,fk_location_obj,dateFilter):
     availableQuantity = 0
-    totalTransferred = Transfers.objects.filter(Q(fk_location_from = fk_location_obj)|Q(fk_location_to = fk_location_obj),fk_import=fk_import_obj).aggregate(inTransfers = Coalesce(Sum(Case(When(fk_location_to = fk_location_obj, then='quantity'),output_field=IntegerField())),0) ,outTransfers = Coalesce(Sum(Case(When(fk_location_from = fk_location_obj, then='quantity'),output_field=IntegerField())),0))
+    totalTransferred = Transfers.objects.filter(Q(fk_location_from = fk_location_obj)|Q(fk_location_to = fk_location_obj),fk_import=fk_import_obj,the_date__lte = dateFilter).aggregate(inTransfers = Coalesce(Sum(Case(When(fk_location_to = fk_location_obj, then='quantity'),output_field=IntegerField())),0) ,outTransfers = Coalesce(Sum(Case(When(fk_location_from = fk_location_obj, then='quantity'),output_field=IntegerField())),0))
     availableQuantity += totalTransferred['inTransfers']
     availableQuantity -= totalTransferred['outTransfers']
-    soldQuantity = SalesItems.objects.filter(fk_import = fk_import_obj, fk_sales__fk_location = fk_location_obj).aggregate(soldQuantity = Coalesce(Sum('quantity'),0))['soldQuantity']
+    soldQuantity = SalesItems.objects.filter(fk_import = fk_import_obj, fk_sales__fk_location = fk_location_obj,fk_sales__the_date__lte = dateFilter).aggregate(soldQuantity = Coalesce(Sum('quantity'),0))['soldQuantity']
     availableQuantity -= soldQuantity
     return availableQuantity
 
-def availableImports(locations):
+def availableImports(locations,dateFilter):
     # show imports that has quantity
-    all_imports = Imports.objects.all()
+    all_imports = Imports.objects.filter(the_date__lte = dateFilter)
     importsAvaliable = []
     for one_import in all_imports:
         for one_location in locations:
-            if availableQuantityInLocation(one_import, one_location) > 0:
+            if availableQuantityInLocation(one_import, one_location,dateFilter) > 0:
                 importsAvaliable.append(one_import.id)
                 break
     return importsAvaliable

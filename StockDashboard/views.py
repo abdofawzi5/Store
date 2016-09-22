@@ -83,7 +83,7 @@ def importsDetailsContext(request):
         dateFilter = datetime.strptime(dateFilter, '%Y-%m-%d').date()
     context['dateFilter'] = str(dateFilter)
     context['locations'] = getAllLocations()
-    availableImportsIDs = availableImports(Location.objects.all())
+    availableImportsIDs = availableImports(Location.objects.all(),dateFilter)
     context['availableImports'] = importsDetailByIDs(availableImportsIDs,dateFilter)
     fromDate = (dateFilter-timedelta(90)).replace(day=1)
     last3monthImports =  Imports.objects.filter(the_date__gte = fromDate,the_date__lte=dateFilter).values('id')

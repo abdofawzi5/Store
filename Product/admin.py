@@ -9,6 +9,7 @@ from Product.views import availableQuantityInLocation
 from Company.models import Location
 from MyUser.views import availableLocation
 import os
+from datetime import date
 
 """
 *******************************************************************************
@@ -108,7 +109,7 @@ class TransfersForm(forms.ModelForm):
         quantity_obj = self.cleaned_data.get('quantity')
         if quantity_obj == 0:
             raise ValidationError(_("Can't transfer Zero quantity"))
-        availableQuantity = availableQuantityInLocation(fk_import_obj, fk_location_from_obj)
+        availableQuantity = availableQuantityInLocation(fk_import_obj, fk_location_from_obj,date.today())
         if self.instance:
             availableQuantity += self.instance.quantity
         if availableQuantity < quantity_obj:
@@ -142,7 +143,7 @@ class TransfersAdmin(admin.ModelAdmin):
         # get locations can user access
         all_locations = availableLocation(request)
         # show imports that has quantity
-        importsIDs = availableImports(all_locations)
+        importsIDs = availableImports(all_locations,date.today())
         if context['original'] and context['original'].id:
             importsIDs.append(context['original'].fk_import.id)
         context['adminform'].form.fields['fk_import'].queryset = Imports.objects.filter(id__in = importsIDs)
@@ -179,7 +180,7 @@ class SalesItemInlineValidation(BaseInlineFormSet):
                 minPrice = float(fk_import_obj.selling_price * (100 - fk_import_obj.discount_rate))/100
                 if minPrice > price_obj:
                     raise ValidationError(_("Can't sale less than ") + unicode(minPrice))
-                availableQuantity = availableQuantityInLocation(fk_import_obj, fk_location_obj)
+                availableQuantity = availableQuantityInLocation(fk_import_obj, fk_location_obj,date.today())
                 if form.cleaned_data['id']:
                     availableQuantity += form.cleaned_data['id'].quantity
                 if availableQuantity < quantity_obj:
@@ -204,7 +205,7 @@ class SalesItemInline(admin.TabularInline):
             # get locations can user access
             all_locations = availableLocation(request)
             # show imports that has quantity
-            importsIDs = availableImports(all_locations)
+            importsIDs = availableImports(all_locations,date.today())
             if request.sales:
                 sales_imports =  request.sales.Sales.all()
                 for i in sales_imports:
