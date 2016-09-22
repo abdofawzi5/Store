@@ -105,6 +105,11 @@
           <!-- sidebar menu: : style can be found in sidebar.less -->
           <ul class="sidebar-menu">            
       			<li class="header">Locations</li>
+      			<li class="active treeview">
+      			  <a href="imports?dateFilter={{dateFilter}}">
+      			    <i class="fa fa-cloud-download" aria-hidden="true"></i> <span>Imports</span> 
+      			  </a>
+      			</li>
       			{% for locationType in locations %}
       			<li class="active treeview">
       			  <a href="#">

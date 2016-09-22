@@ -1,11 +1,12 @@
-from Product.models import Transfers, SalesItems, Imports, Sales , Product
-from Company.models import Company 
-from django.db.models import Q
+from django.db.models import Q, F
 from django.db.models.functions import Coalesce
 from django.db.models.aggregates import Sum
 from django.db.models.expressions import Case, When
 from django.db.models.fields import IntegerField
+from django.db import models
 from django.core.files import File
+from Product.models import Transfers, SalesItems, Imports, Sales , Product
+from Company.models import Company 
 from wkhtmltopdf.views import PDFTemplateResponse
 from wkhtmltopdf.utils import wkhtmltopdf
 from Store import settings
@@ -164,7 +165,15 @@ def locationAvailableQuantity(locationID,dateFilter):
             found['products'].append(productDic)
     return productCategory
             
-        
+def importsDetailByIDs(IDs,dateFilter):
+#     imports = Imports.objects.filter(id__in = IDs,the_date__lte = dateFilter).values('fk_product__fk_category__name','fk_product__name','the_date','id','quantity','price','selling_price','discount_rate').annotate(sold_quantity = Coalesce(Sum('SoldImport__quantity'),0),salesIncome = ((Sum(F("SoldImport__quantity")*F("SoldImport__price"), output_field=models.FloatField()))))
+    imports = Imports.objects.filter(id__in = IDs,the_date__lte = dateFilter).values('fk_product__fk_category__name','fk_product__name','the_date','id','quantity','price','selling_price','discount_rate').annotate(sold_quantity = Coalesce(Sum(Case(When(SoldImport__fk_sales__the_date__lte = dateFilter, then='SoldImport__quantity'),output_field=IntegerField())),0),salesIncome = ((Sum((Case(When(SoldImport__fk_sales__the_date__lte = dateFilter, then='SoldImport__quantity'),output_field=IntegerField()))*(Case(When(SoldImport__fk_sales__the_date__lte = dateFilter, then='SoldImport__price'),output_field=IntegerField())), output_field=models.FloatField()))))
+    for oneImport in imports:
+        oneImport['available_quantity'] = oneImport['quantity'] - oneImport['sold_quantity']
+        oneImport['earned'] = oneImport['salesIncome'] - oneImport['price']
+        oneImport['ExpectedSellingPrice'] = ((oneImport['selling_price']*(100-oneImport['discount_rate']))/100) * oneImport['quantity']
+        oneImport['code'] = str(oneImport['id']) +'-'+ unicode(oneImport['fk_product__fk_category__name']) + '-' + oneImport['fk_product__name'] +'-IM'+ str(oneImport['the_date'].year)+ str(oneImport['the_date'].month)+ str(oneImport['the_date'].day)
+    return imports
         
         
         
