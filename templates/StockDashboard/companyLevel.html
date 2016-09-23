@@ -45,6 +45,25 @@
     </div><!-- /.box -->
   </div><!-- /.col -->
   
+  <div class="col-md-12">
+    <div class="box box-danger">
+      <div class="box-header with-border">
+        <h3 class="box-title"></h3>
+        <div class="box-tools pull-right">
+          <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+          <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+        </div>
+      </div><!-- /.box-header -->
+      <div class="box-body">
+        <div class="row">
+          <div class="col-md-12">
+              <div id="salesPerDayChart" style="margin: 0 auto"></div>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- ./box-body -->
+    </div><!-- /.box -->
+  </div><!-- /.col -->
+
   <div class="col-md-6">
     <div class="box box-warning">
       <div class="box-header with-border">
@@ -65,7 +84,7 @@
   </div><!-- /.col -->
 
   <div class="col-md-6">
-    <div class="box box-danger">
+    <div class="box">
       <div class="box-header with-border">
         <h3 class="box-title"></h3>
         <div class="box-tools pull-right">
@@ -85,6 +104,7 @@
 
 
 
+
 </div><!-- /.row -->
 
 
@@ -92,7 +112,10 @@
 {% block import_scripts%}
 
 <script type="text/javascript">
+    draw_chart('#salesPerDayChart',{{salesPerDayChart|safe}},'spline',null,2,null)
     draw_chart_with_Drilldown('#soldQuantityThisMonthChart',{{soldQuantityThisMonthChart|safe}},0,null);
     draw_chart_with_Drilldown('#soldQuantityLastMonthChart',{{soldQuantityLastMonthChart|safe}},0,null);
+
+    salesPerDayChart
 </script>
 {%endblock%}

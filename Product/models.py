@@ -25,7 +25,7 @@ class Product(models.Model):
     name = models.CharField(max_length = SHORT_NAME_LENGTH, verbose_name=_('Product Name'))
     photo = models.ImageField(blank = True, null = True ,upload_to = 'Product/' ,verbose_name = _('photo'))
     description = models.CharField(blank = True, null = True,max_length = LONG_TEXT_LENGTH, verbose_name = _('Description'))
-    fk_category = models.ForeignKey(ProductCategory, verbose_name=_('Category'))
+    fk_category = models.ForeignKey(ProductCategory, verbose_name=_('Category'),related_name = _('Category'))
     createdAt = models.DateField(auto_now_add=True , verbose_name = _('Created At'))
     displayFlag = models.BooleanField(default=True, verbose_name = _('Display to users in WebSite'))
     def __unicode__(self):

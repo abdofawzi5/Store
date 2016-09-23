@@ -91,8 +91,11 @@ def drawChart (dataDictionaryInList,chartTitle,subtitle,yAxisTitle,yAxisTitle2,u
     """
     yAxis =[]
     for dic in dataDictionaryInList:
-        yAxis.append(yAxisForm(dic['name'], dic['data']))
-    
+        if 'visible' in dic:
+            yAxis.append(yAxisForm(dic['name'], dic['data'],dic['visible']))
+        else:
+            yAxis.append(yAxisForm(dic['name'], dic['data']))
+            
     return setChart(chartTitle,subtitle, xAxisList, yAxis,None,yAxisTitle, yAxisTitle2, unit)
 
 def drawChartWithDrilldown(dataDictionaryInList,chartTitle,subtitle,yAxisTitle,yAxisTitle2,unit,xAxisList):

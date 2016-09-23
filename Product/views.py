@@ -174,8 +174,15 @@ def importsDetailByIDs(IDs,dateFilter):
         oneImport['ExpectedSellingPrice'] = ((oneImport['selling_price']*(100-oneImport['discount_rate']))/100) * oneImport['quantity']
         oneImport['code'] = str(oneImport['id']) +'-'+ unicode(oneImport['fk_product__fk_category__name']) + '-' + oneImport['fk_product__name'] +'-IM'+ str(oneImport['the_date'].year)+ str(oneImport['the_date'].month)+ str(oneImport['the_date'].day)
     return imports
-        
-        
-        
+
+def getSalesPerDay(locations,fromDate,toDate):
+    sales = SalesItems.objects.filter(fk_sales__fk_location__in = locations,fk_sales__the_date__gte = fromDate, fk_sales__the_date__lte = toDate).values('fk_sales__the_date').annotate(salesIncome = Coalesce(Sum(F('quantity')*F('price'), output_field=models.FloatField()),0)).order_by('fk_sales__the_date')
+    totalNumOfDays = int((toDate - fromDate).days) + 1
+    perDay = [None] * totalNumOfDays
+    for oneSales in sales:
+        dayNum = (oneSales['fk_sales__the_date'] - fromDate).days
+        if dayNum >= 0 and dayNum < totalNumOfDays:
+            perDay[dayNum] = oneSales['salesIncome']
+    return perDay
         
         

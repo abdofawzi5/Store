@@ -153,7 +153,7 @@ function draw_chart(className,axis,chartType,switchEach,floatSize,reverse)
       		connectNulls: true
       	}
       },tooltip: {
-      	headerFormat: '<span style="font-size:10px">{% trans "Day" %}: {point.key}</span><table>',
+      	headerFormat: '<span style="font-size:10px">{% trans "Day" %} {point.key}</span><table>',
       	pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
       	'<td style="padding:0"><b> {point.y} '+axis.unit+'</b></td></tr>',
       	footerFormat: '</table>',

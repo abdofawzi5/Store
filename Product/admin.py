@@ -24,7 +24,7 @@ class ProductInline(admin.TabularInline):
 
 class CategoryAdmin(admin.ModelAdmin):   
     list_display = ('name',)
-    search_fields=['name',]
+    search_fields=['name','Category__name']
     list_filter = ('name',)
     inlines = [ProductInline,]
 
@@ -75,8 +75,8 @@ class TransfersInline(admin.TabularInline):
 
 class ImportsAdmin(admin.ModelAdmin):
     list_display = ('id','the_date','fk_product','quantity','price','selling_price','discount_rate')
-    search_fields=['id','the_date','fk_product__name','fk_product__fk_category__name']
-    list_filter = ('fk_product__fk_category__name', 'fk_product__name')
+    search_fields=['id','the_date','Imports__fk_location_to','fk_product__name','fk_product__fk_category__name']
+    list_filter = ('the_date','Imports__fk_location_to','fk_product__fk_category', 'fk_product')
     inlines = (TransfersInline,)
     fieldsets = (
         (None, {
@@ -119,8 +119,8 @@ class TransfersForm(forms.ModelForm):
 class TransfersAdmin(admin.ModelAdmin):
     form = TransfersForm
     list_display = ('id','fk_import','fk_location_from','fk_location_to','quantity','the_date')
-    search_fields=['id','fk_import__id','the_date','fk_location_from__name','fk_location_to__name']
-    list_filter = ('fk_location_from','fk_location_to')
+    search_fields=['id','fk_import__id','the_date','fk_location_from__name','fk_location_to__name','fk_import__fk_product__fk_category__name','fk_import__fk_product__name']
+    list_filter = ('the_date','fk_location_from','fk_location_to','fk_import__fk_product__fk_category','fk_import__fk_product')
     fieldsets = (
         (None, {
             'fields': ('fk_import', 'the_date')
@@ -216,7 +216,7 @@ class SalesItemInline(admin.TabularInline):
 class SalesAdmin(admin.ModelAdmin): 
     list_display = ('id','the_date','fk_location','invoice_link')
     search_fields=['id','the_date','fk_location__name','name','email']
-    list_filter = ('fk_location__name','id','the_date',)
+    list_filter = ('the_date','fk_location','Sales__fk_import__fk_product__fk_category','Sales__fk_import__fk_product')
     
     fieldsets = (
         (None, {
