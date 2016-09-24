@@ -80,10 +80,12 @@ function draw_chart(className,axis,chartType,switchEach,floatSize,reverse)
   {
     floatSize=0;
   }
+
   if (reverse == null)
   {
     reverse = false;
   }
+
   var yAxisDic ={}
   if(switchEach == null)
   {
@@ -147,16 +149,19 @@ function draw_chart(className,axis,chartType,switchEach,floatSize,reverse)
       	categories: axis.xAxis,
       	reversed: reverse
       },
+      legend:{
+          itemDistance:40
+      },
       yAxis:yAxisDic 
       ,plotOptions: {
       	series: {
       		connectNulls: true
       	}
       },tooltip: {
-      	headerFormat: '<span style="font-size:10px">{% trans "Day" %} {point.key}</span><table>',
-      	pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-      	'<td style="padding:0"><b> {point.y} '+axis.unit+'</b></td></tr>',
-      	footerFormat: '</table>',
+        headerFormat: '<span>{point.key}</span><table>',
+        pointFormat: '<tr><td style="color:{series.color};float:left;direction: ltr;">{series.name}: </td>' +
+        '<td><b style="float:right"> {point.y} '+axis.unit+'</b></td></tr>',
+        footerFormat: '</table>',
       	shared: true,
       	useHTML: true,
       	valueDecimals:floatSize,
@@ -169,6 +174,11 @@ function draw_chart(className,axis,chartType,switchEach,floatSize,reverse)
 
 function draw_chart_with_Drilldown(className,axis,floatSize,reverse)
 {
+  if (reverse == null)
+  {
+    reverse = false;
+  }
+
   $(function () {
     // Create the chart
     $(className).highcharts({
@@ -185,6 +195,7 @@ function draw_chart_with_Drilldown(className,axis,floatSize,reverse)
             type: 'category'
         },
         yAxis: {
+            opposite: reverse,
             title: {
                 text: axis.yAxis_title
             }

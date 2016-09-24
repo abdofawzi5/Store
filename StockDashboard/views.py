@@ -1,4 +1,4 @@
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, render
 from django.contrib.auth.decorators import login_required
 from django.utils.translation import  ugettext_lazy as _
 from datetime import date, timedelta, datetime
@@ -11,7 +11,7 @@ from Charts.views import drawChartWithDrilldown, drawChart, xAxisListDates
 @login_required(login_url='/admin/login/')
 def companyLevel(request):
     context = companyLevelContext(request)
-    return render_to_response('StockDashboard/companyLevel.html',context)
+    return render(request,'StockDashboard/companyLevel.html',context)
 
 def companyLevelContext(request):
     context = {}
@@ -42,7 +42,7 @@ def companyLevelContext(request):
 @login_required(login_url='/admin/login/')
 def locationLevel(request):
     context = locationLevelContext(request)
-    return render_to_response('StockDashboard/locationLevel.html',context)
+    return render(request,'StockDashboard/locationLevel.html',context)
 
 def locationLevelContext(request):
     context = {}
@@ -72,7 +72,7 @@ def locationLevelContext(request):
 @login_required(login_url='/admin/login/')
 def importsDetails(request):
     context = importsDetailsContext(request)
-    return render_to_response('StockDashboard/importsDetails.html',context)
+    return render(request,'StockDashboard/importsDetails.html',context)
 
 def importsDetailsContext(request):
     context = {}

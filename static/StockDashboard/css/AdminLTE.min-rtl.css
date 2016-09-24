@@ -18,3 +18,10 @@
 	display: flex;
 	direction: rtl;
 }
+.rtl-border{
+	background-color:#3c8dbc;
+	border-right:3px solid #555299 !important;
+	color:white;
+	height:32px !important;
+}
+

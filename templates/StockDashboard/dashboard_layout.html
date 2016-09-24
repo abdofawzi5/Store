@@ -1,6 +1,7 @@
 {% load i18n static%}
+{% get_available_languages as LANGUAGES %}
 <!DOCTYPE html>
-<html>
+<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
   <head>
     <meta charset="UTF-8">
     <title>Dashboard</title>
@@ -65,7 +66,7 @@
   					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
   					  <i class="fa fa-filter faicon-size"></i>
   					</a>
-  					<ul class="dropdown-menu" >
+  					<ul class="dropdown-menu">
   						<li class="user-header" style="height:110px;">
   							<p>Filter on specific date</p>
   					    	<!-- Date Filter -->
@@ -97,6 +98,21 @@
               </li>
             </ul>
           </div>
+	        <form action="/i18n/setlang/" method="post" style="padding-top:10px;">
+				{% csrf_token %}
+	            <div class="input-group input-group-md">
+					<input name="next" type="hidden" value="{{ request.session.no_lang_path }}" />
+	                <div class="input-group-btn">
+	                	<select type="button" class="btn dropdown-toggle" style="background-color:#3c8dbc;color:white;" name="language" data-toggle="dropdown">
+				            {% for lang in LANGUAGES %}
+					            <option value="{{ lang.0 }}" {% ifequal lang.0 request.LANGUAGE_CODE%}selected="yes"
+					            {% endifequal %}>{{ lang.1 }}</option>
+				            {% endfor %}
+	                    </select>
+                      <input type="submit" class="btn btn-flat rtl-border" value="Go!" style="">
+	                </div>
+	            </div>
+	        </form>
         </nav>
       </header>
 

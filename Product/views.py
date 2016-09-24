@@ -166,7 +166,6 @@ def locationAvailableQuantity(locationID,dateFilter):
     return productCategory
             
 def importsDetailByIDs(IDs,dateFilter):
-#     imports = Imports.objects.filter(id__in = IDs,the_date__lte = dateFilter).values('fk_product__fk_category__name','fk_product__name','the_date','id','quantity','price','selling_price','discount_rate').annotate(sold_quantity = Coalesce(Sum('SoldImport__quantity'),0),salesIncome = ((Sum(F("SoldImport__quantity")*F("SoldImport__price"), output_field=models.FloatField()))))
     imports = Imports.objects.filter(id__in = IDs,the_date__lte = dateFilter).values('fk_product__fk_category__name','fk_product__name','the_date','id','quantity','price','selling_price','discount_rate').annotate(sold_quantity = Coalesce(Sum(Case(When(SoldImport__fk_sales__the_date__lte = dateFilter, then='SoldImport__quantity'),output_field=IntegerField())),0),salesIncome = Coalesce((Sum((Case(When(SoldImport__fk_sales__the_date__lte = dateFilter, then='SoldImport__quantity'),output_field=IntegerField()))*(Case(When(SoldImport__fk_sales__the_date__lte = dateFilter, then='SoldImport__price'),output_field=IntegerField())), output_field=models.FloatField())),0))
     for oneImport in imports:
         oneImport['available_quantity'] = oneImport['quantity'] - oneImport['sold_quantity']
@@ -179,10 +178,12 @@ def getSalesPerDay(locations,fromDate,toDate):
     sales = SalesItems.objects.filter(fk_sales__fk_location__in = locations,fk_sales__the_date__gte = fromDate, fk_sales__the_date__lte = toDate).values('fk_sales__the_date').annotate(salesIncome = Coalesce(Sum(F('quantity')*F('price'), output_field=models.FloatField()),0)).order_by('fk_sales__the_date')
     totalNumOfDays = int((toDate - fromDate).days) + 1
     perDay = [None] * totalNumOfDays
+    maxAge = 0
     for oneSales in sales:
         dayNum = (oneSales['fk_sales__the_date'] - fromDate).days
         if dayNum >= 0 and dayNum < totalNumOfDays:
             perDay[dayNum] = oneSales['salesIncome']
-    return perDay
+            maxAge = max(maxAge,dayNum)
+    return perDay[:maxAge+1]
         
         

@@ -57,8 +57,8 @@
       </div><!-- /.box-header -->
       <div class="box-body">
         <div class="row">
-          <div class="col-md-12">
-              <div id="salesPerDayChart" style="margin: 0 auto"></div>
+          <div class="col-md-12" style="direction:ltr;">
+              <div id="salesPerDayChart" style="margin: 0 auto;padding:10px;"></div>
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- ./box-body -->
@@ -76,8 +76,8 @@
       </div><!-- /.box-header -->
       <div class="box-body">
         <div class="row">
-          <div class="col-md-12">
-              <div id="soldQuantityLastMonthChart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+          <div class="col-md-12" style="direction:ltr;">
+              <div id="soldQuantityLastMonthChart" style="margin: 0 auto;padding:10px;"></div>
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- ./box-body -->
@@ -95,8 +95,8 @@
       </div><!-- /.box-header -->
       <div class="box-body">
         <div class="row">
-          <div class="col-md-12">
-              <div id="soldQuantityThisMonthChart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+          <div class="col-md-12" style="direction:ltr;">
+              <div id="soldQuantityThisMonthChart" style="margin: 0 auto;padding:10px;"></div>
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- ./box-body -->
@@ -112,8 +112,13 @@
 {% block import_scripts%}
 
 <script type="text/javascript">
-    draw_chart('#salesPerDayChart',{{salesPerDayChart|safe}},'spline',null,2,null)
-    draw_chart_with_Drilldown('#soldQuantityThisMonthChart',{{soldQuantityThisMonthChart|safe}},0,null);
-    draw_chart_with_Drilldown('#soldQuantityLastMonthChart',{{soldQuantityLastMonthChart|safe}},0,null);
+    var reverse = null;
+    if ('{{language_code}}' == 'ar')
+    {
+      reverse = true;
+    }
+    draw_chart('#salesPerDayChart',{{salesPerDayChart|safe}},'spline',null,2,reverse)
+    draw_chart_with_Drilldown('#soldQuantityThisMonthChart',{{soldQuantityThisMonthChart|safe}},0,reverse);
+    draw_chart_with_Drilldown('#soldQuantityLastMonthChart',{{soldQuantityLastMonthChart|safe}},0,reverse);
 </script>
 {%endblock%}
