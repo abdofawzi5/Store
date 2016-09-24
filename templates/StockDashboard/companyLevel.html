@@ -1,5 +1,5 @@
 {% extends "StockDashboard/dashboard_layout.html" %}
-{% load staticfiles %}
+{% load i18n static%}
 {% block import_style%}{%endblock%}
 {% block sidebar_menu%}
 {%endblock%}            
@@ -11,7 +11,7 @@
   <div class="col-md-12">
     <div class="box box-success">
       <div class="box-header with-border">
-        <h3 class="box-title">Availble Quantity</h3>
+        <h3 class="box-title">{% trans "Availble Quantity" %}</h3>
         <div class="box-tools pull-right">
           <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
           <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
@@ -27,8 +27,8 @@
                       <th colspan="3" class="text-center"">{{category.category_name}}</th>
                     </tr>
                     <tr>
-                      <th>Product</th>
-                      <th>Quantity</th>
+                      <th>{% trans "Product" %}</th>
+                      <th>{% trans "Quantity" %}</th>
                     </tr>
                     {% for product in category.products%}
                     <tr>

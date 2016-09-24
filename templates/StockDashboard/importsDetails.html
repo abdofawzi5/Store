@@ -1,5 +1,5 @@
 {% extends "StockDashboard/dashboard_layout.html" %}
-{% load staticfiles %}
+{% load i18n static%}
 {% block import_style%}
   <!-- DataTables -->
   <link href="{% static 'common/plugins/datatables/dataTables.bootstrap.css' %}" rel="stylesheet" type="text/css" />
@@ -7,7 +7,7 @@
 {% block sidebar_menu%}
 {%endblock%}            
 {% block content_header%}
-<li><a href="#">Imports</a></li>
+<li><a href="#">{% trans "Imports" %}</a></li>
 {%endblock%}
 
 {% block main_content%}
@@ -15,7 +15,7 @@
   <div class="col-md-12">
     <div class="box">
       <div class="box-header with-border">
-        <h3 class="box-title">Availble Imports</h3>
+        <h3 class="box-title">{% trans "Availble Imports" %}</h3>
         <div class="box-tools pull-right">
           <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
           <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
@@ -29,17 +29,17 @@
               <table id="availbleImportsTable" class="table table-bordered table-hover table-striped">
                 <thead>
                 <tr>
-                  <th>Category</th>
-                  <th>Product</th>
-                  <th>Date</th>
-                  <th>Quantity</th>
-                  <th>Sold Quantity</th>
-                  <th>Available Quantity</th>
-                  <th>Discount Rate</th>
-                  <th>Total Price</th>
-                  <th>Expected Selling Price per Item</th>
-                  <th>Sales</th>
-                  <th>Earned</th>
+                  <th>{% trans "Category" %}</th>
+                  <th>{% trans "Product" %}</th>
+                  <th>{% trans "Date" %}</th>
+                  <th>{% trans "Quantity" %}</th>
+                  <th>{% trans "Sold Quantity" %}</th>
+                  <th>{% trans "Available Quantity" %}</th>
+                  <th>{% trans "Discount Rate" %}</th>
+                  <th>{% trans "Total Price" %}</th>
+                  <th>{% trans "Expected Selling Price per Item" %}</th>
+                  <th>{% trans "Sales" %}</th>
+                  <th>{% trans "Earned" %}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -53,7 +53,7 @@
                       <td>{{oneImport.available_quantity}}</td>
                       <td>{{oneImport.discount_rate}}</td>
                       <td>{{oneImport.price}}</td>
-                      <td>{{oneImport.ExpectedSellingPrice}}&nbsp;&nbsp;<small>( {{oneImport.selling_price}} per item</small> )</td>
+                      <td>{{oneImport.ExpectedSellingPrice}}&nbsp;&nbsp;<small>( {{oneImport.selling_price}} {% trans "per item" %}</small> )</td>
                       <td>{{oneImport.salesIncome}}</td>
                       <td>{{oneImport.earned}}</td>
                     </tr>
@@ -72,7 +72,7 @@
   <div class="col-md-12">
     <div class="box">
       <div class="box-header with-border">
-        <h3 class="box-title">Imports last 3 month</h3>
+        <h3 class="box-title">{% trans "Imports last 3 month" %}</h3>
         <div class="box-tools pull-right">
           <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
           <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
@@ -86,17 +86,17 @@
               <table id="last3monthImportsTable" class="table table-bordered table-hover table-striped">
                 <thead>
                 <tr>
-                  <th>Category</th>
-                  <th>Product</th>
-                  <th>Date</th>
-                  <th>Quantity</th>
-                  <th>Sold Quantity</th>
-                  <th>Available Quantity</th>
-                  <th>Discount Rate</th>
-                  <th>Total Price</th>
-                  <th>Expected Selling Price per Item</th>
-                  <th>Sales</th>
-                  <th>Earned</th>
+                  <th>{% trans "Category" %}</th>
+                  <th>{% trans "Product" %}</th>
+                  <th>{% trans "Date" %}</th>
+                  <th>{% trans "Quantity" %}</th>
+                  <th>{% trans "Sold Quantity" %}</th>
+                  <th>{% trans "Available Quantity" %}</th>
+                  <th>{% trans "Discount Rate" %}</th>
+                  <th>{% trans "Total Price" %}</th>
+                  <th>{% trans "Expected Selling Price per Item" %}</th>
+                  <th>{% trans "Sales" %}</th>
+                  <th>{% trans "Earned" %}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -110,7 +110,7 @@
                       <td>{{oneImport.available_quantity}}</td>
                       <td>{{oneImport.discount_rate}}</td>
                       <td>{{oneImport.price}}</td>
-                      <td>{{oneImport.ExpectedSellingPrice}}&nbsp;&nbsp;<small>( {{oneImport.selling_price}} per item</small> )</td>
+                      <td>{{oneImport.ExpectedSellingPrice}}&nbsp;&nbsp;<small>( {{oneImport.selling_price}} {% trans "per item" %}</small> )</td>
                       <td>{{oneImport.salesIncome}}</td>
                       <td>{{oneImport.earned}}</td>
                     </tr>

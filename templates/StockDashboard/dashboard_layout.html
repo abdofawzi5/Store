@@ -56,7 +56,7 @@
           </a>
           <!-- Date Filter Display-->
           <a href="#" class="sidebar-toggle remove-content" role="button">
-            <span >Date: {{dateFilter}}</span>
+            <span >{% trans "Date" %}: {{dateFilter}}</span>
           </a>
           <!-- Navbar Right Menu -->
           <div class="navbar-custom-menu">
@@ -68,7 +68,7 @@
   					</a>
   					<ul class="dropdown-menu">
   						<li class="user-header" style="height:110px;">
-  							<p>Filter on specific date</p>
+  							<p>{% trans "Filter on specific date" %}</p>
   					    	<!-- Date Filter -->
   						    <div class="form-group">
   						        <div class="input-group">
@@ -82,10 +82,10 @@
   						<!-- Menu Footer-->
   					    <li class="user-footer">
   						    <div class="pull-left">
-  						    	<a href="/" class="btn btn-default btn-flat filterButton">Filter</a>
+  						    	<a href="/" class="btn btn-default btn-flat filterButton">{% trans "Filter" %}</a>
   						    </div>
   						    <div class="pull-right">
-  						    	<a href="/dashboard" class="btn btn-default btn-flat">Go Live</a>
+  						    	<a href="/dashboard" class="btn btn-default btn-flat">{% trans "Go Live" %}</a>
   						    </div>
   						</li>
   					</ul>
@@ -109,7 +109,7 @@
 					            {% endifequal %}>{{ lang.1 }}</option>
 				            {% endfor %}
 	                    </select>
-                      <input type="submit" class="btn btn-flat rtl-border" value="Go!" style="">
+                      <input type="submit" class="btn btn-flat rtl-border" value="{% trans 'Go' %}" style="">
 	                </div>
 	            </div>
 	        </form>
@@ -128,7 +128,7 @@
       			<li class="header"></li>
       			<li class="treeview">
       			  <a href="imports?dateFilter={{dateFilter}}">
-      			    <i class="fa fa-cloud-download" aria-hidden="true"></i> <span>Imports</span> 
+      			    <i class="fa fa-cloud-download" aria-hidden="true"></i> <span>{% trans "Imports" %}</span> 
       			  </a>
       			</li>
       			<li class="header">Locations</li>
@@ -160,7 +160,7 @@
         <section class="content-header">
           <!-- <h1>Company Dashboard</h1> -->
           <ol class="breadcrumb" style="float:left !Important;position:relative; width:100%;height:60px; font-size:15px;">
-            <li><i class="fa fa-dashboard"></i> <a href="/dashboard/?dateFilter={{dateFilter}}">Home</a></li>
+            <li><i class="fa fa-dashboard"></i> <a href="/dashboard/?dateFilter={{dateFilter}}">{% trans "Home" %}</a></li>
             {% block content_header%}{%endblock%}
           </ol>
         </section>
