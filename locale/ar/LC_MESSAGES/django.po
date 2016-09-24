@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-10 18:00+0200\n"
+"POT-Creation-Date: 2016-09-24 23:08+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -90,7 +90,7 @@ msgstr "الهاتف"
 msgid "Created At"
 msgstr ""
 
-#: Company/models.py:55 Product/admin.py:121 Product/models.py:70
+#: Company/models.py:55 Product/admin.py:128 Product/models.py:70
 msgid "Location"
 msgstr "المكان"
 
@@ -118,60 +118,69 @@ msgstr "الأماكن المسموحه"
 msgid "Locations can access and edit"
 msgstr "الأماكن المسموح ان يقوم بتعديل عليها"
 
-#: Product/admin.py:49 Product/admin.py:106
+#: Product/admin.py:49
+msgid "Transfer Date can't be less than import Date"
+msgstr "تاريخ النقل قبل تاريخ الواردات"
+
+#: Product/admin.py:52 Product/admin.py:111
 msgid "Can't transfer Zero quantity"
 msgstr "لا يمكن نقل صفر كميه"
 
-#: Product/admin.py:55
+#: Product/admin.py:58
 msgid "Enter Location and Quantity"
 msgstr "أدخل المكان والكميه"
 
-#: Product/admin.py:58
+#: Product/admin.py:61
 msgid "Quantity to transfer is more than imported"
 msgstr "الكميه المنقوله اكبر من الوارده"
 
-#: Product/admin.py:82
+#: Product/admin.py:85
 msgid "Import info"
 msgstr "بينات الواردات"
 
-#: Product/admin.py:85
+#: Product/admin.py:88
 msgid "Selling plan"
 msgstr "خطه البيع"
 
-#: Product/admin.py:109
+#: Product/admin.py:116
 msgid "This Quantity is not Available, Available Quantity = "
 msgstr "هذه الكميه غير متوفره, الكميه المتوفره = "
 
-#: Product/admin.py:124 Product/models.py:40 Product/models.py:59
-#: Product/models.py:124
+#: Product/admin.py:131 Product/models.py:40 Product/models.py:59
+#: Product/models.py:124 templates/StockDashboard/companyLevel.html.py:31
+#: templates/StockDashboard/importsDetails.html:35
+#: templates/StockDashboard/importsDetails.html:96
+#: templates/StockDashboard/locationLevel.html:32
 msgid "Quantity"
 msgstr "الكيمه"
 
-#: Product/admin.py:162 Product/admin.py:190
+#: Product/admin.py:172 Product/admin.py:193
 msgid "Can't sell Zero quantity"
 msgstr "لا يمكنك بيع صفر كميه"
 
-#: Product/admin.py:167
+#: Product/admin.py:177
 msgid "Error"
 msgstr "خطأ"
 
-#: Product/admin.py:172
+#: Product/admin.py:182
 msgid "Can't sale less than "
 msgstr "لا يمكن بيع اقل من "
 
-#: Product/admin.py:184
+#: Product/admin.py:187
 msgid "Quantity more than imported for "
 msgstr "الكميه اكبر من الواردات لـ"
 
-#: Product/admin.py:186
+#: Product/admin.py:189
 msgid " Available Quantity is "
 msgstr "الكميه المتوفره هى "
 
-#: Product/admin.py:217
+#: Product/admin.py:225
 msgid "Client Information"
 msgstr "معلومات العميل "
 
 #: Product/models.py:15 Product/models.py:28
+#: templates/StockDashboard/importsDetails.html:32
+#: templates/StockDashboard/importsDetails.html:93
 msgid "Category"
 msgstr "الفئه"
 
@@ -196,6 +205,10 @@ msgid "Display to users in WebSite"
 msgstr "أظهار فى موقع المستخدمين"
 
 #: Product/models.py:35 Product/models.py:39
+#: templates/StockDashboard/companyLevel.html:30
+#: templates/StockDashboard/importsDetails.html:33
+#: templates/StockDashboard/importsDetails.html:94
+#: templates/StockDashboard/locationLevel.html:31
 msgid "Product"
 msgstr "المنتج"
 
@@ -203,7 +216,8 @@ msgstr "المنتج"
 msgid "Products"
 msgstr "المنتجات"
 
-#: Product/models.py:41
+#: Product/models.py:41 templates/StockDashboard/importsDetails.html.py:39
+#: templates/StockDashboard/importsDetails.html:100
 msgid "Total Price"
 msgstr "السعر الكلى"
 
@@ -211,11 +225,15 @@ msgstr "السعر الكلى"
 msgid "Selling Price per Item"
 msgstr "سعر بيع القطعه الواحده"
 
-#: Product/models.py:43
+#: Product/models.py:43 templates/StockDashboard/importsDetails.html.py:38
+#: templates/StockDashboard/importsDetails.html:99
 msgid "Discount Rate"
 msgstr "خصم"
 
 #: Product/models.py:44 Product/models.py:60 Product/models.py:71
+#: templates/StockDashboard/dashboard_layout.html:59
+#: templates/StockDashboard/importsDetails.html:34
+#: templates/StockDashboard/importsDetails.html:95
 msgid "Date"
 msgstr "التاريخ"
 
@@ -224,6 +242,8 @@ msgid "Import"
 msgstr "الوارد"
 
 #: Product/models.py:51 Product/models.py:56
+#: templates/StockDashboard/dashboard_layout.html:131
+#: templates/StockDashboard/importsDetails.html:10
 msgid "Imports"
 msgstr "الواردات"
 
@@ -260,6 +280,8 @@ msgid "Sale"
 msgstr "البيع"
 
 #: Product/models.py:84 Product/models.py:122
+#: templates/StockDashboard/importsDetails.html:41
+#: templates/StockDashboard/importsDetails.html:102
 msgid "Sales"
 msgstr "المبيعات"
 
@@ -279,10 +301,18 @@ msgstr "المنتج"
 msgid "Sales Items"
 msgstr "المنتجات"
 
-#: StockDashboard/views.py:25 StockDashboard/views.py:32
-#: StockDashboard/views.py:54 StockDashboard/views.py:61
+#: StockDashboard/views.py:27 StockDashboard/views.py:34
+#: StockDashboard/views.py:59 StockDashboard/views.py:66
 msgid "Sold Quantity in "
 msgstr "الكميه المباعه فى "
+
+#: StockDashboard/views.py:38 StockDashboard/views.py:122
+msgid "Company Income"
+msgstr "دخل الشركه"
+
+#: StockDashboard/views.py:69 StockDashboard/views.py:126
+msgid "Income"
+msgstr "الدخل"
 
 #: Website/admin.py:15
 msgid "From"
@@ -327,3 +357,83 @@ msgstr "منشور"
 #: Website/models.py:47
 msgid "Posts"
 msgstr "منشورات"
+
+#: templates/StockDashboard/companyLevel.html:14
+#: templates/StockDashboard/locationLevel.html:15
+msgid "Availble Quantity"
+msgstr "الكميه المتوفره "
+
+#: templates/StockDashboard/dashboard_layout.html:71
+msgid "Filter on specific date"
+msgstr ""
+
+#: templates/StockDashboard/dashboard_layout.html:85
+msgid "Filter"
+msgstr ""
+
+#: templates/StockDashboard/dashboard_layout.html:88
+msgid "Go Live"
+msgstr "مباشر"
+
+#: templates/StockDashboard/dashboard_layout.html:112
+#: templates/admin/base.html:58
+msgid "Go"
+msgstr "أذهب"
+
+#: templates/StockDashboard/dashboard_layout.html:163
+#: templates/admin/base.html:69
+msgid "Home"
+msgstr "الصقحه الرئيسيه"
+
+#: templates/StockDashboard/importsDetails.html:18
+msgid "Availble Imports"
+msgstr "الواردات المتوفره"
+
+#: templates/StockDashboard/importsDetails.html:36
+#: templates/StockDashboard/importsDetails.html:97
+msgid "Sold Quantity"
+msgstr "الكميه المباعه"
+
+#: templates/StockDashboard/importsDetails.html:37
+#: templates/StockDashboard/importsDetails.html:98
+msgid "Available Quantity"
+msgstr "الكميه المتوفره"
+
+#: templates/StockDashboard/importsDetails.html:40
+#: templates/StockDashboard/importsDetails.html:101
+msgid "Expected Selling Price"
+msgstr "السعر المتوقع للبيع"
+
+#: templates/StockDashboard/importsDetails.html:42
+#: templates/StockDashboard/importsDetails.html:103
+msgid "Earned"
+msgstr "المكسب"
+
+#: templates/StockDashboard/importsDetails.html:56
+#: templates/StockDashboard/importsDetails.html:117
+msgid "per item"
+msgstr "للقطعه"
+
+#: templates/StockDashboard/importsDetails.html:79
+msgid "Imports last 3 month"
+msgstr "الواردات فى اخر 3 أشهر"
+
+#: templates/admin/base.html:30
+msgid "Welcome,"
+msgstr ""
+
+#: templates/admin/base.html:35
+msgid "View site"
+msgstr ""
+
+#: templates/admin/base.html:40
+msgid "Documentation"
+msgstr ""
+
+#: templates/admin/base.html:44
+msgid "Change password"
+msgstr ""
+
+#: templates/admin/base.html:46
+msgid "Log out"
+msgstr ""
