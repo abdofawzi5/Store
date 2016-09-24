@@ -55,7 +55,11 @@
                       <td>{{oneImport.price}}</td>
                       <td>{{oneImport.ExpectedSellingPrice}}&nbsp;&nbsp;<small>( {{oneImport.selling_price}} {% trans "per item" %}</small> )</td>
                       <td>{{oneImport.salesIncome}}</td>
-                      <td>{{oneImport.earned}}</td>
+                      {% if oneImport.earned > 0%}
+                      <td class="text-success" style="font-weight: bold;">{{oneImport.earned}}</td>
+                      {% else %}
+                      <td class="text-danger bg-danger"  style="font-weight: bold;">{{oneImport.earned}}</td>
+                      {% endif %}
                     </tr>
                   {% endfor %}
                 </tbody>
@@ -112,7 +116,11 @@
                       <td>{{oneImport.price}}</td>
                       <td>{{oneImport.ExpectedSellingPrice}}&nbsp;&nbsp;<small>( {{oneImport.selling_price}} {% trans "per item" %}</small> )</td>
                       <td>{{oneImport.salesIncome}}</td>
-                      <td>{{oneImport.earned}}</td>
+                      {% if oneImport.earned > 0%}
+                      <td class="text-success" style="font-weight: bold;">{{oneImport.earned}}</td>
+                      {% else %}
+                      <td class="text-danger bg-danger"  style="font-weight: bold;">{{oneImport.earned}}</td>
+                      {% endif %}
                     </tr>
                   {% endfor %}
                 </tbody>

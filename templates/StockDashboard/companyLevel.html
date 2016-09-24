@@ -32,10 +32,18 @@
                     </tr>
                     {% for product in category.products%}
                     <tr>
+                      {% if product.quantity > 10 %}
                       <td>{{product.product_name}}</td>
                       <td>{{product.quantity}}</td>
-                    {% endfor %}
+                      {% elif product.quantity == 0 %}
+                      <td class="text-danger bg-danger"  style="font-weight: bold;">{{product.product_name}}</td>
+                      <td class="text-danger bg-danger"  style="font-weight: bold;">{{product.quantity}}</td>
+                      {% else %}
+                      <td class="bg-warning text-warning" style="font-weight:bold;">{{product.product_name}}</td>
+                      <td class="bg-warning text-warning" style="font-weight:bold;">{{product.quantity}}</td>
+                      {% endif %}
                     </tr>
+                    {% endfor %}
                   </table>
                 </div>            
               </div><!-- /.col -->
