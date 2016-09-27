@@ -1,7 +1,9 @@
+#!/bin/sh
 echo "install system packages"
 sudo apt-get install apache2 mysql-server mysql-client python2.7 python-pip python-dev build-essential vim nano git
 sudo aptitude install apache2 apache2.2-common apache2-mpm-prefork apache2-utils libexpat1 ssl-cert
 sudo aptitude install libapache2-mod-wsgi
+sudo apt-get install python-mysqldb
 echo "instll python packages"
 sudo pip install django==1.9
 sudo pip install Pillow
