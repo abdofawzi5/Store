@@ -106,11 +106,11 @@ def soldQuantityChart(chartTitle,fromDate,toDate,locationsIDs):
     dataDictionaryInList = []
     for oneQuantity in totalQuantity:
         dic = {}
-        dic['name'] = str(oneQuantity['category_name'])
+        dic['name'] = unicode(oneQuantity['category_name'])
         categoryQuantity = 0
         dic['data'] = []
         for product in oneQuantity['products']:
-            dic['data'].append([str(product['product_name']),product['quantity']])
+            dic['data'].append([unicode(product['product_name']),product['quantity']])
             categoryQuantity += product['quantity']
         dic['value'] = categoryQuantity
         dataDictionaryInList.append(dic)
