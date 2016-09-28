@@ -125,6 +125,51 @@ USE_L10N = True
 USE_TZ = True
 
 
+import logging.config
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format' : "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+            'datefmt' : "%Y-%b-%d %H:%M:%S"
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'handlers': {
+        'ErrorFileHandler': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': (os.path.join( BASE_DIR, 'static/logs/errors.log')),
+            'formatter':'verbose'
+        },
+        'DebugFileHandler': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': (os.path.join( BASE_DIR, 'static/logs/debug.log')),
+            'formatter':'verbose'
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers':['ErrorFileHandler'],
+            'propagate': True,
+            'level':'ERROR',
+        },
+        'DailyData': {
+            'handlers': ['DebugFileHandler'],
+            'level': 'DEBUG',
+        },
+    }
+}
+
+logging.config.dictConfig(LOGGING)
+
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 STATIC_URL = '/static/'
