@@ -118,6 +118,19 @@ def auto_delete_file_on_change(sender, instance, **kwargs):
         if os.path.isfile(old_file.path):
             os.remove(old_file.path)
 
+
+class Tax(models.Model):
+    name = models.CharField(max_length = LONG_NAME_LENGTH, verbose_name=_('Name'))
+    percent = models.IntegerField(default=0,validators = [MinValueValidator(0),MaxValueValidator(100)], verbose_name=_('Quantity'))
+
+    def __unicode__(self):
+        return unicode(self.name) +' '+ unicode(self.percent)
+
+    class Meta:
+        verbose_name = _('Tax')
+        verbose_name_plural = _('Taxes')
+
+
 class SalesItems(models.Model):
     fk_sales = models.ForeignKey(Sales, verbose_name = _('Sales'),related_name = _('Sales'))
     fk_import = models.ForeignKey(Imports, verbose_name = _('Import'),related_name = _('SoldImport'))
