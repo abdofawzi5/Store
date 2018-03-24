@@ -14,3 +14,4 @@ db.sqlite3
 
 # Ignore uploaded file
 /media/task_attachments
+media-root/

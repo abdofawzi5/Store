@@ -44,6 +44,7 @@ INSTALLED_APPS = (
     'MyUser',
     'Product',
     'StockDashboard',
+    'escpos',
 )
 
 MIDDLEWARE_CLASSES = (

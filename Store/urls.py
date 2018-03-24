@@ -11,7 +11,7 @@ urlpatterns = [
     url(r'^media/(?P<filename>.*)', views.protected_media),
     
     # Examples:
-    # url(r'^$', 'Store.views.home', name='home'),
+    url(r'^invoice/', 'Product.views.get_invoice', name='get_invoice'),
     url(r'^dashboard/', include('StockDashboard.urls',namespace="StockDashboard")),
     url(r'^', include('StockDashboard.urls',namespace="StockDashboard")),
     url(r'^i18n/', include('django.conf.urls.i18n')),

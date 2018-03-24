@@ -1,0 +1,285 @@
+[2018-Mar-24 18:05:42] ERROR [django.request:284] Internal Server Error: /invoice
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 235, in get_response
+    response = middleware_method(request, response)
+  File "/usr/local/lib/python2.7/dist-packages/django/middleware/common.py", line 113, in process_response
+    if self.should_redirect_with_slash(request):
+  File "/usr/local/lib/python2.7/dist-packages/django/middleware/common.py", line 78, in should_redirect_with_slash
+    and urlresolvers.is_valid_path('%s/' % request.path_info, urlconf)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/urlresolvers.py", line 668, in is_valid_path
+    resolve(path, urlconf)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/urlresolvers.py", line 534, in resolve
+    return get_resolver(urlconf).resolve(path)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/urlresolvers.py", line 376, in resolve
+    sub_match = pattern.resolve(new_path)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/urlresolvers.py", line 248, in resolve
+    return ResolverMatch(self.callback, args, kwargs, self.name)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/urlresolvers.py", line 255, in callback
+    self._callback = get_callable(self._callback_str)
+  File "/usr/local/lib/python2.7/dist-packages/django/utils/lru_cache.py", line 100, in wrapper
+    result = user_function(*args, **kwds)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/urlresolvers.py", line 136, in get_callable
+    (lookup_view, mod_name))
+ViewDoesNotExist: Could not import 'Store.views.get_invoice'. View does not exist in module Store.views.
+[2018-Mar-24 18:06:09] ERROR [django.request:284] Internal Server Error: /invoice/
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 149, in get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 147, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/abdofawzi/Workspace/Store/Product/views.py", line 17, in get_invoice
+    sales = Sales.objects.get(id=request.GET.get('id'))
+  File "/usr/local/lib/python2.7/dist-packages/django/db/models/manager.py", line 122, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/usr/local/lib/python2.7/dist-packages/django/db/models/query.py", line 387, in get
+    self.model._meta.object_name
+DoesNotExist: Sales matching query does not exist.
+[2018-Mar-24 18:06:10] ERROR [django.request:284] Internal Server Error: /invoice/
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 149, in get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 147, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/abdofawzi/Workspace/Store/Product/views.py", line 17, in get_invoice
+    sales = Sales.objects.get(id=request.GET.get('id'))
+  File "/usr/local/lib/python2.7/dist-packages/django/db/models/manager.py", line 122, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/usr/local/lib/python2.7/dist-packages/django/db/models/query.py", line 387, in get
+    self.model._meta.object_name
+DoesNotExist: Sales matching query does not exist.
+[2018-Mar-24 18:06:27] ERROR [django.request:284] Internal Server Error: /invoice/1608/
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 149, in get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 147, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/abdofawzi/Workspace/Store/Product/views.py", line 17, in get_invoice
+    sales = Sales.objects.get(id=request.GET.get('id'))
+  File "/usr/local/lib/python2.7/dist-packages/django/db/models/manager.py", line 122, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/usr/local/lib/python2.7/dist-packages/django/db/models/query.py", line 387, in get
+    self.model._meta.object_name
+DoesNotExist: Sales matching query does not exist.
+[2018-Mar-24 18:06:39] ERROR [django.request:284] Internal Server Error: /invoice/
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 149, in get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 147, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/abdofawzi/Workspace/Store/Product/views.py", line 23, in get_invoice
+    for salesItem in sales.sales_items_set.all():
+AttributeError: 'Sales' object has no attribute 'sales_items_set'
+[2018-Mar-24 18:07:02] ERROR [django.request:284] Internal Server Error: /invoice/
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 149, in get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 147, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/abdofawzi/Workspace/Store/Product/views.py", line 22, in get_invoice
+    for salesItem in sales.sales_items__set.all():
+AttributeError: 'Sales' object has no attribute 'sales_items__set'
+[2018-Mar-24 18:07:03] ERROR [django.request:284] Internal Server Error: /invoice/
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 149, in get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 147, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/abdofawzi/Workspace/Store/Product/views.py", line 22, in get_invoice
+    for salesItem in sales.sales_items__set.all():
+AttributeError: 'Sales' object has no attribute 'sales_items__set'
+[2018-Mar-24 18:10:37] ERROR [django.request:284] Internal Server Error: /invoice/
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 149, in get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 147, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/abdofawzi/Workspace/Store/Product/views.py", line 23, in get_invoice
+    total_price += (salesItem['quantity'] * salesItem['price'])
+UnboundLocalError: local variable 'total_price' referenced before assignment
+[2018-Mar-24 18:10:38] ERROR [django.request:284] Internal Server Error: /invoice/
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 149, in get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 147, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/abdofawzi/Workspace/Store/Product/views.py", line 23, in get_invoice
+    total_price += (salesItem['quantity'] * salesItem['price'])
+UnboundLocalError: local variable 'total_price' referenced before assignment
+[2018-Mar-24 18:10:55] ERROR [django.request:284] Internal Server Error: /invoice/
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 149, in get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 147, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/abdofawzi/Workspace/Store/Product/views.py", line 23, in get_invoice
+    salesItems.append({'product':salesItem['fk_import'].fk_product,'quantity':salesItem['quantity'],'price':salesItem['price']})
+NameError: global name 'salesItems' is not defined
+[2018-Mar-24 18:11:24] ERROR [django.request:284] Internal Server Error: /invoice/
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 149, in get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 147, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/abdofawzi/Workspace/Store/Product/views.py", line 23, in get_invoice
+    salesItems.append({'product':salesItem.fk_import.fk_product,'quantity':salesItem.quantity,'price':salesItem.price})
+NameError: global name 'salesItems' is not defined
+[2018-Mar-24 18:11:25] ERROR [django.request:284] Internal Server Error: /invoice/
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 149, in get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 147, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/abdofawzi/Workspace/Store/Product/views.py", line 23, in get_invoice
+    salesItems.append({'product':salesItem.fk_import.fk_product,'quantity':salesItem.quantity,'price':salesItem.price})
+NameError: global name 'salesItems' is not defined
+[2018-Mar-24 18:11:42] ERROR [django.request:284] Internal Server Error: /invoice/
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 149, in get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 147, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/abdofawzi/Workspace/Store/Product/views.py", line 29, in get_invoice
+    for sales in salesItems:
+NameError: global name 'salesItems' is not defined
+[2018-Mar-24 18:11:43] ERROR [django.request:284] Internal Server Error: /invoice/
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 149, in get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 147, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/abdofawzi/Workspace/Store/Product/views.py", line 29, in get_invoice
+    for sales in salesItems:
+NameError: global name 'salesItems' is not defined
+[2018-Mar-24 18:12:30] ERROR [django.request:284] Internal Server Error: /invoice/
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 149, in get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 147, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/abdofawzi/Workspace/Store/Product/views.py", line 31, in get_invoice
+    render(context, 'invoice/invoice.html')
+NameError: global name 'render' is not defined
+[2018-Mar-24 18:12:31] ERROR [django.request:284] Internal Server Error: /invoice/
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 149, in get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 147, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/abdofawzi/Workspace/Store/Product/views.py", line 31, in get_invoice
+    render(context, 'invoice/invoice.html')
+NameError: global name 'render' is not defined
+[2018-Mar-24 18:13:05] ERROR [django.request:284] Internal Server Error: /invoice/
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 149, in get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 147, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/abdofawzi/Workspace/Store/Product/views.py", line 32, in get_invoice
+    render(context, 'invoice/invoice.html')
+  File "/usr/local/lib/python2.7/dist-packages/django/shortcuts.py", line 67, in render
+    template_name, context, request=request, using=using)
+  File "/usr/local/lib/python2.7/dist-packages/django/template/loader.py", line 97, in render_to_string
+    return template.render(context, request)
+  File "/usr/local/lib/python2.7/dist-packages/django/template/backends/django.py", line 95, in render
+    return self.template.render(context)
+  File "/usr/local/lib/python2.7/dist-packages/django/template/base.py", line 204, in render
+    with context.bind_template(self):
+  File "/usr/lib/python2.7/contextlib.py", line 17, in __enter__
+    return self.gen.next()
+  File "/usr/local/lib/python2.7/dist-packages/django/template/context.py", line 260, in bind_template
+    updates.update(processor(self.request))
+  File "/usr/local/lib/python2.7/dist-packages/django/template/context_processors.py", line 41, in debug
+    if settings.DEBUG and request.META.get('REMOTE_ADDR') in settings.INTERNAL_IPS:
+AttributeError: 'dict' object has no attribute 'META'
+[2018-Mar-24 18:13:30] ERROR [django.request:284] Internal Server Error: /invoice/
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 149, in get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 147, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/abdofawzi/Workspace/Store/Product/views.py", line 32, in get_invoice
+    render(request, context, 'invoice/invoice.html')
+  File "/usr/local/lib/python2.7/dist-packages/django/shortcuts.py", line 67, in render
+    template_name, context, request=request, using=using)
+  File "/usr/local/lib/python2.7/dist-packages/django/template/loader.py", line 96, in render_to_string
+    template = get_template(template_name, using=using)
+  File "/usr/local/lib/python2.7/dist-packages/django/template/loader.py", line 43, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+TemplateDoesNotExist: {'salesNumber': u'1608-Store-Store1-S2018316', 'company': <Company: Abdo>, 'total': 41170.0, 'sales': <Sales: 1608-Store-Store1-S2018316>, 'salesItems': [{'product': <Product: TV-LG 49LH590V>, 'price': 4117.0, 'quantity': 10L}]}
+[2018-Mar-24 18:14:01] ERROR [django.request:284] Internal Server Error: /invoice/
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 149, in get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 147, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/abdofawzi/Workspace/Store/Product/views.py", line 32, in get_invoice
+    render(request, context, 'invoice.html')
+  File "/usr/local/lib/python2.7/dist-packages/django/shortcuts.py", line 67, in render
+    template_name, context, request=request, using=using)
+  File "/usr/local/lib/python2.7/dist-packages/django/template/loader.py", line 96, in render_to_string
+    template = get_template(template_name, using=using)
+  File "/usr/local/lib/python2.7/dist-packages/django/template/loader.py", line 43, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+TemplateDoesNotExist: {'salesNumber': u'1608-Store-Store1-S2018316', 'company': <Company: Abdo>, 'total': 41170.0, 'sales': <Sales: 1608-Store-Store1-S2018316>, 'salesItems': [{'product': <Product: TV-LG 49LH590V>, 'price': 4117.0, 'quantity': 10L}]}
+[2018-Mar-24 18:14:30] ERROR [django.request:284] Internal Server Error: /invoice/
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 149, in get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 147, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/abdofawzi/Workspace/Store/Product/views.py", line 32, in get_invoice
+    render(request, context, 'invoice/invoice.html')
+  File "/usr/local/lib/python2.7/dist-packages/django/shortcuts.py", line 67, in render
+    template_name, context, request=request, using=using)
+  File "/usr/local/lib/python2.7/dist-packages/django/template/loader.py", line 96, in render_to_string
+    template = get_template(template_name, using=using)
+  File "/usr/local/lib/python2.7/dist-packages/django/template/loader.py", line 43, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+TemplateDoesNotExist: {'salesNumber': u'1608-Store-Store1-S2018316', 'company': <Company: Abdo>, 'total': 41170.0, 'sales': <Sales: 1608-Store-Store1-S2018316>, 'salesItems': [{'product': <Product: TV-LG 49LH590V>, 'price': 4117.0, 'quantity': 10L}]}
+[2018-Mar-24 18:15:15] ERROR [django.request:284] Internal Server Error: /invoice/
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 158, in get_response
+    % (callback.__module__, view_name))
+ValueError: The view Product.views.get_invoice didn't return an HttpResponse object. It returned None instead.
+[2018-Mar-24 18:41:45] ERROR [django.request:284] Internal Server Error: /invoice/
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 149, in get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 147, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/abdofawzi/Workspace/Store/Product/views.py", line 18, in get_invoice
+    from escpos.printer import Usb
+ImportError: No module named escpos.printer
+[2018-Mar-24 18:46:00] ERROR [django.request:284] Internal Server Error: /invoice/
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 149, in get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 147, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/abdofawzi/Workspace/Store/Product/views.py", line 21, in get_invoice
+    p = Usb(0x04b8, 0x0202, 0, profile="TM-T88III")
+  File "/usr/local/lib/python2.7/dist-packages/escpos/printer.py", line 45, in __init__
+    Escpos.__init__(self, *args, **kwargs)
+TypeError: __init__() got an unexpected keyword argument 'profile'
+[2018-Mar-24 18:46:33] ERROR [django.request:284] Internal Server Error: /invoice/
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 149, in get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 147, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/abdofawzi/Workspace/Store/Product/views.py", line 21, in get_invoice
+    p = Usb(0x04b8, 0x0202, 0, profile="TM-T88III")
+  File "/usr/local/lib/python2.7/dist-packages/escpos/printer.py", line 45, in __init__
+    Escpos.__init__(self, *args, **kwargs)
+TypeError: __init__() got an unexpected keyword argument 'profile'
+[2018-Mar-24 18:51:06] ERROR [django.request:284] Internal Server Error: /invoice/
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 149, in get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 147, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/abdofawzi/Workspace/Store/Product/views.py", line 21, in get_invoice
+    p = Usb(0x04b8, 0x0202, 0, profile="TM-T88III")
+  File "/usr/local/lib/python2.7/dist-packages/escpos/printer.py", line 45, in __init__
+    Escpos.__init__(self, *args, **kwargs)
+TypeError: __init__() got an unexpected keyword argument 'profile'
