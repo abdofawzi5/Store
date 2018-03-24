@@ -13,7 +13,7 @@ urlpatterns = [
     # Examples:
     # url(r'^$', 'Store.views.home', name='home'),
     url(r'^dashboard/', include('StockDashboard.urls',namespace="StockDashboard")),
-    url(r'^', include('Website.urls',namespace="StockDashboard")),
+    url(r'^', include('StockDashboard.urls',namespace="StockDashboard")),
     url(r'^i18n/', include('django.conf.urls.i18n')),
 ]
 # if settings.DEBUG is True:

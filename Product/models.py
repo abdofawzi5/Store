@@ -51,7 +51,6 @@ class Imports(models.Model):
         verbose_name_plural = _('Imports')
 
 
-
 class Transfers(models.Model):
     fk_import = models.ForeignKey(Imports, verbose_name = _('Imports'),related_name = _('Imports'))
     fk_location_from = models.ForeignKey(Location, null = True, verbose_name = _('Transfer From'),related_name = _('TransferFrom'))
@@ -66,10 +65,25 @@ class Transfers(models.Model):
         verbose_name = _('Transfer')
         verbose_name_plural = _('Transfers')
 
+
+class Tax(models.Model):
+    name = models.CharField(max_length = LONG_NAME_LENGTH, verbose_name=_('Name'))
+    percent = models.IntegerField(default=0,validators = [MinValueValidator(0),MaxValueValidator(100)], verbose_name=_('Quantity'))
+    enable = models.BooleanField(default=True, verbose_name = _('Enable'))
+
+    def __unicode__(self):
+        return unicode(self.name) +' ('+ unicode(self.percent) + '%)'
+
+    class Meta:
+        verbose_name = _('Tax')
+        verbose_name_plural = _('Taxes')
+
+
 class Sales(models.Model):
-    fk_location = models.ForeignKey(Location, verbose_name = _('Location'),related_name = _('Location'))
+    fk_location = models.ForeignKey(Location, verbose_name = _('Location'),related_name = _('location'))
     the_date = models.DateField(default=date.today ,blank=False, verbose_name = _('Date'))
     invoice = models.FileField(upload_to = 'invoices/',editable=False ,verbose_name = _('invoice'))
+    taxes = models.IntegerField(default=0,validators = [MinValueValidator(0)], verbose_name=_('Taxes Amount'))
     # Client info
     name = models.CharField(max_length = LONG_NAME_LENGTH, verbose_name = _('Name'))
     phone = models.CharField(max_length = LONG_NAME_LENGTH, verbose_name = _('Phone'))
@@ -117,18 +131,6 @@ def auto_delete_file_on_change(sender, instance, **kwargs):
     if not old_file == new_file:
         if os.path.isfile(old_file.path):
             os.remove(old_file.path)
-
-
-class Tax(models.Model):
-    name = models.CharField(max_length = LONG_NAME_LENGTH, verbose_name=_('Name'))
-    percent = models.IntegerField(default=0,validators = [MinValueValidator(0),MaxValueValidator(100)], verbose_name=_('Quantity'))
-
-    def __unicode__(self):
-        return unicode(self.name) +' '+ unicode(self.percent)
-
-    class Meta:
-        verbose_name = _('Tax')
-        verbose_name_plural = _('Taxes')
 
 
 class SalesItems(models.Model):
