@@ -16,7 +16,6 @@ from escpos.printer import Usb
 
 
 def get_invoice(request):
-
     """ Seiko Epson Corp. Receipt Printer (EPSON TM-T88III) """
     p = Usb(0x04b8, 0x0202, 0, profile="TM-T88III")
     p.text("Hello World\n")
@@ -27,18 +26,18 @@ def get_invoice(request):
 
     sales = Sales.objects.get(id=request.GET.get('id'))
     context = {}
-    # context['sales'] = sales
-    # context['salesNumber'] = sales.__unicode__()
-    # context['salesItems'] = []
-    # for salesItem in sales.Sales.all():
-    #     context['salesItems'].append({'product':salesItem.fk_import.fk_product,'quantity':salesItem.quantity,'price':salesItem.price})
-    # try:
-    #     context['company'] = Company.objects.all()[0]
-    # except:
-    #     context['company'] = None
-    # context['total'] = 0
-    # for sales in context['salesItems']:
-    #     context['total'] += sales['price'] * sales['quantity'] 
+    context['sales'] = sales
+    context['salesNumber'] = sales.__unicode__()
+    context['salesItems'] = []
+    for salesItem in sales.Sales.all():
+        context['salesItems'].append({'product':salesItem.fk_import.fk_product,'quantity':salesItem.quantity,'price':salesItem.price})
+    try:
+        context['company'] = Company.objects.all()[0]
+    except:
+        context['company'] = None
+    context['total'] = 0
+    for sales in context['salesItems']:
+        context['total'] += sales['price'] * sales['quantity'] 
     return render(request, 'invoice/invoice.html', context)
 
 

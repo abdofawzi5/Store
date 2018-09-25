@@ -1,7 +1,7 @@
 from django.utils.translation import  ugettext_lazy as _
 from django.forms.models import BaseInlineFormSet
 from django.core.exceptions import ValidationError
-from Product.models import ProductCategory,Product,Imports,Transfers,Sales,SalesItems,Tax
+from Product.models import ProductCategory,Product,Imports,Transfers,Sales,SalesItems
 from django.contrib import admin
 from django import forms
 from Product.views import availableImports, generateInvoice
@@ -218,14 +218,10 @@ class SalesAdmin(admin.ModelAdmin):
     list_display = ('id','the_date','fk_location','invoice_link')
     search_fields=['id','the_date','fk_location__name','name','email']
     list_filter = ('the_date','fk_location','Sales__fk_import__fk_product__fk_category','Sales__fk_import__fk_product')
-    readonly_fields = ('taxes',)
 
     fieldsets = (
         (None, {
             'fields': ('fk_location', 'the_date')
-        }),
-        (_('Taxes'), {
-            'fields': ('taxes',),
         }),
         (_('Client Information'), {
             'fields': (('name','phone'), ('address','email')),
@@ -255,20 +251,18 @@ class SalesAdmin(admin.ModelAdmin):
     def save_related(self, request, form, formsets, change):
         super(SalesAdmin, self).save_related(request, form, formsets, change)
         obj = form.instance
-        if not obj.id:
-            salesItems= []
-            total_price = 0
-            for form in formsets:
-                for salesItem in form.cleaned_data:
-                    if salesItem and not salesItem.get('DELETE'):
-                        total_price += (salesItem['quantity'] * salesItem['price'])
-                        salesItems.append({'product':salesItem['fk_import'].fk_product,'quantity':salesItem['quantity'],'price':salesItem['price']})
-            # invoiceFile = generateInvoice(request, form.instance,salesItems) # generate bill and get file object
-            # obj.invoice.save(invoiceFile.name,invoiceFile,save=True) # save file 
-            # os.remove(invoiceFile.name) # remove temp file
-            # To Do print
-            totla_percent = Tax.objects.filter(enable=True).aggregate(totla_percent=Sum('percent'))['totla_percent']
-            obj.taxes = (total_price * 100) / totla_percent
+        # if not obj.id:
+        salesItems= []
+        total_price = 0
+        for form in formsets:
+            for salesItem in form.cleaned_data:
+                if salesItem and not salesItem.get('DELETE'):
+                    total_price += (salesItem['quantity'] * salesItem['price'])
+                    salesItems.append({'product':salesItem['fk_import'].fk_product,'quantity':salesItem['quantity'],'price':salesItem['price']})
+        invoiceFile = generateInvoice(request, form.instance,salesItems) # generate bill and get file object
+        obj.invoice.save(invoiceFile.name,invoiceFile,save=True) # save file 
+        os.remove(invoiceFile.name) # remove temp file
+        # To Do print
         obj.save()
 
 
@@ -276,7 +270,6 @@ admin.site.register(ProductCategory, CategoryAdmin)
 admin.site.register(Imports, ImportsAdmin)
 admin.site.register(Transfers, TransfersAdmin)
 admin.site.register(Sales, SalesAdmin)
-admin.site.register(Tax)
 
 # hide add group
 from django.contrib.auth.models import Group

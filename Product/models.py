@@ -66,24 +66,10 @@ class Transfers(models.Model):
         verbose_name_plural = _('Transfers')
 
 
-class Tax(models.Model):
-    name = models.CharField(max_length = LONG_NAME_LENGTH, verbose_name=_('Name'))
-    percent = models.IntegerField(default=0,validators = [MinValueValidator(0),MaxValueValidator(100)], verbose_name=_('Quantity'))
-    enable = models.BooleanField(default=True, verbose_name = _('Enable'))
-
-    def __unicode__(self):
-        return unicode(self.name) +' ('+ unicode(self.percent) + '%)'
-
-    class Meta:
-        verbose_name = _('Tax')
-        verbose_name_plural = _('Taxes')
-
-
 class Sales(models.Model):
     fk_location = models.ForeignKey(Location, verbose_name = _('Location'),related_name = _('location'))
     the_date = models.DateField(default=date.today ,blank=False, verbose_name = _('Date'))
     invoice = models.FileField(upload_to = 'invoices/',editable=False ,verbose_name = _('invoice'))
-    taxes = models.IntegerField(default=0,validators = [MinValueValidator(0)], verbose_name=_('Taxes Amount'))
     # Client info
     name = models.CharField(max_length = LONG_NAME_LENGTH, verbose_name = _('Name'))
     phone = models.CharField(max_length = LONG_NAME_LENGTH, verbose_name = _('Phone'))
@@ -99,7 +85,7 @@ class Sales(models.Model):
 
     def invoice_link(self):
         if self.invoice:
-            return "<a href='%s'>Download invoice</a>" % (self.invoice.url,)
+            return "<a href='%s' target='_blank'>Download invoice</a>" % (self.invoice.url,)
         else:
             return "No attachment"
     invoice_link.allow_tags = True
