@@ -44,7 +44,7 @@ INSTALLED_APPS = (
     'MyUser',
     'Product',
     'StockDashboard',
-    'escpos',
+    # 'escpos',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -82,7 +82,7 @@ WSGI_APPLICATION = 'Store.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/1.8/ref/settings/#databases
+# https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
 # MySQL
 # CREATE DATABASE stocky DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
@@ -94,11 +94,17 @@ DATABASES = {
 #     },
     'default': {
         'ENGINE': 'django.db.backends.mysql', 
-        'NAME': 'stocky',
-        'USER': 'root',
-        'PASSWORD': 'root',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'NAME': os.environ.get('MYSQL_DATABASE'),
+        'USER': os.environ.get('MYSQL_USERNAME'),
+        'PASSWORD': os.environ.get('MYSQL_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('DB_PORT'),        
+
+        # 'NAME': 'stocky',
+        # 'USER': 'root',
+        # 'PASSWORD': 'root',
+        # 'HOST': 'localhost',
+        # 'PORT': '3306',
     }
 }
 
