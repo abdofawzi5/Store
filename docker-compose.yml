@@ -10,9 +10,9 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
   web:
-    entrypoint: ["./wait-for-it.sh", "db:3306","--"]
+    entrypoint: ["./scripts/wait-for-it.sh", "db:3306","--"]
     build: .
-    command: bash -c "./before-start.sh && python manage.py runserver 0.0.0.0:8000"
+    command: bash -c "./scripts/before-start.sh && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/code
     ports:

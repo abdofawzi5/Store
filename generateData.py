@@ -1,9 +1,9 @@
-import django
-import os
-# from Store import settings
+# configure django
+import django, os,sys
 os.environ['DJANGO_SETTINGS_MODULE'] = 'Store.settings'
 django.setup()
 
+# import models
 from Company.models import Company, LocationType, Location
 from Product.models import Product, ProductCategory, Imports, Transfers, Sales,\
     SalesItems
@@ -12,9 +12,9 @@ import random
 
 productsIDs = []
 locationsIDs = []
-# company = Company(name='stocky',slogan='MySlogan',short_description='Stocky is an stock management system',long_description='Stocky is an stock management system, can Monitor Data, Measure sales performance and generate invoices',phone='0xxxxxxxxxx',address='3x street, City, Country ',email='name@domain.com')
-# company.save()
-# print "Done adding Company"
+company = Company(name='stocky',slogan='MySlogan',short_description='Stocky is an stock management system',long_description='Stocky is an stock management system, can Monitor Data, Measure sales performance and generate invoices',phone='0xxxxxxxxxx',address='3x street, City, Country ',email='name@domain.com')
+company.save()
+print "Done adding Company"
 
 locationsList = ['Store','Stock']
 for locationName in locationsList:
