@@ -12,8 +12,7 @@ services:
   web:
     entrypoint: ["./wait-for-it.sh", "db:3306","--"]
     build: .
-    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-    # command: python manage.py runserver 0.0.0.0:8000
+    command: bash -c "./before-start.sh && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/code
     ports:
