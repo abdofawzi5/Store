@@ -1,0 +1,105 @@
+{% extends "website/website_layout.html" %}
+{%block title%}| Product{%endblock%}
+
+{%block main_containt%}
+    <script type="text/javascript">
+    </script>
+   <!-- Page Content -->
+    <div class="container">
+
+        <div class="row">
+
+            <div class="col-md-3">
+                <p class="lead">{{company.name}}</p>
+                <div class="list-group">
+                    {% for category in categories %}
+                    <a href="#" class="list-group-item" onclick="switchCategory('#'+'{{category.category.name}}')">{{category.category.name}}</a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                {% if ads %}
+                <div class="row carousel-holder">
+
+                    <div class="col-md-12">
+                        <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                            <ol class="carousel-indicators">
+                                {% for ad in ads %}
+                                    {% if forloop.counter0 == 0 %}
+                                    <li data-target="#carousel-example-generic" data-slide-to="{{ forloop.counter0 }}" class="active"></li>
+                                    {% else %}
+                                    <li data-target="#carousel-example-generic" data-slide-to="{{ forloop.counter0 }}" ></li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ol>
+                            <div class="carousel-inner">
+                                {% for ad in ads %}
+                                    {% if forloop.counter0 == 0 %}
+                                    <div class="item active">
+                                    {% else %}
+                                    <div class="item">
+                                    {% endif %}
+                                        <img class="slide-image" src="{{ad.photo.url}}" alt="{{ad.name}}" style="width:800px;height:300px;margin-left:auto;margin-right:auto;">
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+                                <span class="glyphicon glyphicon-chevron-left"></span>
+                            </a>
+                            <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+                {% endif %}
+
+
+                {% for category in categories %}
+                    <div class="row" id="{{category.category.name}}">
+                        {% for product in category.products %}
+                        <div class="col-sm-4 col-lg-4 col-md-4">
+                            <div class="thumbnail">
+                                {% if product.photo %}
+                                <img src="{{product.photo.url}}" alt="" style="width:320px;height:120px;margin-left:auto;margin-right:auto;">
+                                {% else %}
+                                <img src="http://placehold.it/320x150" alt="">
+                                {% endif %}
+                                <div class="caption">
+                                    <h4>{{product.name}}</h4>
+                                    <p>{{product.description}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}                    
+                    </div>
+                    {% if forloop.counter0 != 0 %}
+                        <script type="text/javascript">
+                            var devID = "#"+"{{category.category.name}}"; 
+                            $(devID).hide();
+                        </script>
+                        {% else %}
+                        <script type="text/javascript">
+                            var devID = "#"+"{{category.category.name}}"; 
+                            categoryDisplayed = devID;
+                        </script>
+                    {% endif %}
+                {% endfor %}
+    
+            </div>
+
+        </div>
+
+    </div>
+    <!-- /.container -->
+    <script type="text/javascript">
+        function switchCategory(displayID){
+            $(categoryDisplayed).hide();
+            $(displayID).show();   
+            categoryDisplayed = displayID;         
+        }
+
+    </script>
+{%endblock%}

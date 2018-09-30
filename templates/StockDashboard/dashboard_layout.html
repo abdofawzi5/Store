@@ -1,6 +1,7 @@
-{% load staticfiles %}
+{% load i18n static%}
+{% get_available_languages as LANGUAGES %}
 <!DOCTYPE html>
-<html>
+<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
   <head>
     <meta charset="UTF-8">
     <title>Dashboard</title>
@@ -14,19 +15,24 @@
     <link href="{% static 'common/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css" />
     <!-- Ionicons -->
     <link href="{% static 'common/ionicons.min.css' %}" rel="stylesheet" type="text/css" />
-    <!-- Theme style -->
+    <!-- AdminLTE style -->
+    {% get_current_language as language_code %}
+	{% if language_code == 'ar' %}
+    <link href="{% static 'StockDashboard/css/AdminLTE.min-rtl.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'StockDashboard/css/bootstrap-rtl.min.css' %}" rel="stylesheet" type="text/css" />
+    {% else %}
     <link href="{% static 'StockDashboard/css/AdminLTE.min.css' %}" rel="stylesheet" type="text/css" />
+    {% endif %}
+
+ 
     <!-- AdminLTE Skins. Choose a skin from the css/skins
          folder instead of downloading all of them to reduce the load. -->
     <link href="{% static 'StockDashboard/css/skins/_all-skins.min.css' %}" rel="stylesheet" type="text/css" />
-    <!-- RTL Theme style -->
-<!--     <link href="{% static 'StockDashboard/css/rtl-min.css' %}" rel="stylesheet" type="text/css" />
- -->
     <!-- Stock Dashboard Style -->
     <link href="{% static 'StockDashboard/css/stockDashboard.css' %}" rel="stylesheet" type="text/css" />
     {% block import_style%}{%endblock%}
     <style type="text/css">
-    </style>
+	</style>
   </head>
   <body class="skin-purple sidebar-mini">
     <div class="wrapper">
@@ -36,11 +42,11 @@
 		<!-- ******************************************************************************** -->
       <header class="main-header">
         <!-- Logo -->
-        <a href="index2.html" class="logo">
+        <a href="/" class="logo">
           <!-- mini logo for sidebar mini 50x50 pixels -->
-          <span class="logo-mini"><b>A</b>LT</span>
+          <span class="logo-mini"><b>A</b></span>
           <!-- logo for regular state and mobile devices -->
-          <span class="logo-lg"><b>Admin</b>LTE</span>
+          <span class="logo-lg"><b>Admin</b></span>
         </a>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top" role="navigation">
@@ -50,7 +56,7 @@
           </a>
           <!-- Date Filter Display-->
           <a href="#" class="sidebar-toggle remove-content" role="button">
-            <span >Date: {{dateFilter}}</span>
+            <span >{% trans "Date" %}: {{dateFilter}}</span>
           </a>
           <!-- Navbar Right Menu -->
           <div class="navbar-custom-menu">
@@ -60,9 +66,9 @@
   					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
   					  <i class="fa fa-filter faicon-size"></i>
   					</a>
-  					<ul class="dropdown-menu" >
+  					<ul class="dropdown-menu">
   						<li class="user-header" style="height:110px;">
-  							<p>Filter on specific date</p>
+  							<p>{% trans "Filter on specific date" %}</p>
   					    	<!-- Date Filter -->
   						    <div class="form-group">
   						        <div class="input-group">
@@ -76,10 +82,10 @@
   						<!-- Menu Footer-->
   					    <li class="user-footer">
   						    <div class="pull-left">
-  						    	<a href="/" class="btn btn-default btn-flat filterButton">Filter</a>
+  						    	<a href="/" class="btn btn-default btn-flat filterButton">{% trans "Filter" %}</a>
   						    </div>
   						    <div class="pull-right">
-  						    	<a href="/" class="btn btn-default btn-flat">Go Live</a>
+  						    	<a href="/dashboard" class="btn btn-default btn-flat">{% trans "Go Live" %}</a>
   						    </div>
   						</li>
   					</ul>
@@ -87,11 +93,26 @@
               <!-- Logout: style can be found in dropdown.less-->
               <li class="dropdown messages-menu">
                 <a href="/admin/logout/?next=/" class="dropdown-toggle">
-                  <i class="fa fa-sign-out faicon-size"></i>
+                  <i class="fa fa-power-off faicon-size"></i>
                 </a>
               </li>
             </ul>
           </div>
+	        <form action="/i18n/setlang/" method="post" style="padding-top:10px;">
+				{% csrf_token %}
+	            <div class="input-group input-group-md">
+					<input name="next" type="hidden" value="{{ request.session.no_lang_path }}" />
+	                <div class="input-group-btn">
+	                	<select type="button" class="btn dropdown-toggle" style="background-color:#3c8dbc;color:white;" name="language" data-toggle="dropdown">
+				            {% for lang in LANGUAGES %}
+					            <option value="{{ lang.0 }}" {% ifequal lang.0 request.LANGUAGE_CODE%}selected="yes"
+					            {% endifequal %}>{{ lang.1 }}</option>
+				            {% endfor %}
+	                    </select>
+                      <input type="submit" class="btn btn-flat rtl-border" value="{% trans 'Go' %}" style="">
+	                </div>
+	            </div>
+	        </form>
         </nav>
       </header>
 
@@ -103,13 +124,19 @@
         <!-- sidebar: style can be found in sidebar.less -->
         <section class="sidebar">
           <!-- sidebar menu: : style can be found in sidebar.less -->
-          <ul class="sidebar-menu">            
+          <ul class="sidebar-menu" style="list-style-type: none;">            
+      			<li class="header"></li>
+      			<li class="treeview">
+      			  <a href="imports?dateFilter={{dateFilter}}">
+      			    <i class="fa fa-cloud-download" aria-hidden="true"></i> <span>{% trans "Imports" %}</span> 
+      			  </a>
+      			</li>
       			<li class="header">Locations</li>
       			{% for locationType in locations %}
-      			<li class="active treeview">
+      			<li class="treeview">
       			  <a href="#">
-      			    <i class="glyphicon glyphicon-home"></i> <span>{{locationType.type}}</span> <i class="fa fa-angle-left pull-right"></i>
-                      <small class="label pull-right bg-green">{{locationType.name|length}}</small>
+      			    <i class="glyphicon glyphicon-home"></i> <span>{{locationType.type}}</span>
+                      <small class="label pull-right bg-green rtl-pull-left">{{locationType.name|length}}</small>
       			  </a>
       			  <ul class="treeview-menu">
       			    {% for location in locationType.name%}
@@ -133,7 +160,7 @@
         <section class="content-header">
           <!-- <h1>Company Dashboard</h1> -->
           <ol class="breadcrumb" style="float:left !Important;position:relative; width:100%;height:60px; font-size:15px;">
-            <li><i class="fa fa-dashboard"></i> <a href="/?dateFilter={{dateFilter}}">Home</a></li>
+            <li><i class="fa fa-dashboard"></i> <a href="/dashboard/?dateFilter={{dateFilter}}">{% trans "Home" %}</a></li>
             {% block content_header%}{%endblock%}
           </ol>
         </section>
@@ -161,7 +188,12 @@
     <!-- FastClick -->
     <script src="{% static 'common/plugins/fastclick/fastclick.min.js' %}"></script>
     <!-- AdminLTE App -->
+    {% get_current_language as language_code %}
+	{% if language_code == 'ar' %}
+    <script src="{% static 'StockDashboard/js/app-rtl.min .js' %}" type="text/javascript"></script>
+    {% else %}
     <script src="{% static 'StockDashboard/js/app.min.js' %}" type="text/javascript"></script>
+    {% endif %}
     <!-- SlimScroll 1.3.0 -->
     <script src="{% static 'common/plugins/slimScroll/jquery.slimscroll.min.js' %}" type="text/javascript"></script>
     <!-- Highchart 4.2.6 -->

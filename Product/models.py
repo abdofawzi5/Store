@@ -25,9 +25,9 @@ class Product(models.Model):
     name = models.CharField(max_length = SHORT_NAME_LENGTH, verbose_name=_('Product Name'))
     photo = models.ImageField(blank = True, null = True ,upload_to = 'Product/' ,verbose_name = _('photo'))
     description = models.CharField(blank = True, null = True,max_length = LONG_TEXT_LENGTH, verbose_name = _('Description'))
-    fk_category = models.ForeignKey(ProductCategory, verbose_name=_('Category'))
+    fk_category = models.ForeignKey(ProductCategory, verbose_name=_('Category'),related_name = _('Category'))
     createdAt = models.DateField(auto_now_add=True , verbose_name = _('Created At'))
-
+    displayFlag = models.BooleanField(default=True, verbose_name = _('Display to users in WebSite'))
     def __unicode__(self):
         return unicode(self.fk_category) + '-' + unicode(self.name)
 
@@ -36,7 +36,7 @@ class Product(models.Model):
         verbose_name_plural = _('Products')
 
 class Imports(models.Model):
-    fk_product = models.ForeignKey(Product, verbose_name = _('Product Product'),related_name = _('Product'))
+    fk_product = models.ForeignKey(Product, verbose_name = _('Product'),related_name = _('Product'))
     quantity = models.IntegerField(default=0,validators = [MinValueValidator(0)], verbose_name=_('Quantity'))
     price = models.FloatField(blank=True,null=True,validators = [MinValueValidator(0.0)],default=0 ,verbose_name=_('Total Price'))
     selling_price = models.FloatField(default=0,validators = [MinValueValidator(0.0)] ,verbose_name=_('Selling Price per Item')) 
@@ -49,7 +49,6 @@ class Imports(models.Model):
     class Meta:
         verbose_name = _('Import')
         verbose_name_plural = _('Imports')
-
 
 
 class Transfers(models.Model):
@@ -66,8 +65,9 @@ class Transfers(models.Model):
         verbose_name = _('Transfer')
         verbose_name_plural = _('Transfers')
 
+
 class Sales(models.Model):
-    fk_location = models.ForeignKey(Location, verbose_name = _('Location'),related_name = _('Location'))
+    fk_location = models.ForeignKey(Location, verbose_name = _('Location'),related_name = _('location'))
     the_date = models.DateField(default=date.today ,blank=False, verbose_name = _('Date'))
     invoice = models.FileField(upload_to = 'invoices/',editable=False ,verbose_name = _('invoice'))
     # Client info
@@ -85,7 +85,7 @@ class Sales(models.Model):
 
     def invoice_link(self):
         if self.invoice:
-            return "<a href='%s'>Download invoice</a>" % (self.invoice.url,)
+            return "<a href='%s' target='_blank'>Download invoice</a>" % (self.invoice.url,)
         else:
             return "No attachment"
     invoice_link.allow_tags = True
@@ -118,6 +118,7 @@ def auto_delete_file_on_change(sender, instance, **kwargs):
         if os.path.isfile(old_file.path):
             os.remove(old_file.path)
 
+
 class SalesItems(models.Model):
     fk_sales = models.ForeignKey(Sales, verbose_name = _('Sales'),related_name = _('Sales'))
     fk_import = models.ForeignKey(Imports, verbose_name = _('Import'),related_name = _('SoldImport'))
@@ -130,4 +131,4 @@ class SalesItems(models.Model):
     class Meta:
         verbose_name = _('Sales Item')
         verbose_name_plural = _('Sales Items')
-    
+        unique_together = ('fk_sales', 'fk_import',)

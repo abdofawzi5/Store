@@ -7,10 +7,10 @@ def getAllLocations():
     for location in allLocations:
         found = next((item for item in locationsList if item["type"] == location['fk_locationType__type']),False)
         if found == False:
-            dict = {}
-            dict['type'] = location['fk_locationType__type']
-            dict['name'] = [{'name':location['name'],'id':location['id']}]
-            locationsList.append(dict)
+            dic = {}
+            dic['type'] = location['fk_locationType__type']
+            dic['name'] = [{'name':location['name'],'id':location['id']}]
+            locationsList.append(dic)
         else:
             found['name'].append({'name':location['name'],'id':location['id']})
     return locationsList

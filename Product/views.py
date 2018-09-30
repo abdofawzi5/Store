@@ -1,15 +1,37 @@
-from Product.models import Transfers, SalesItems, Imports, Sales
-from Company.models import Company 
-from django.db.models import Q
+from django.db.models import Q, F
 from django.db.models.functions import Coalesce
 from django.db.models.aggregates import Sum
 from django.db.models.expressions import Case, When
 from django.db.models.fields import IntegerField
+from django.db import models
 from django.core.files import File
+from Product.models import Transfers, SalesItems, Imports, Sales , Product
+from Company.models import Company 
 from wkhtmltopdf.views import PDFTemplateResponse
 from wkhtmltopdf.utils import wkhtmltopdf
 from Store import settings
+from django.shortcuts import render
 import os, glob
+# from escpos.printer import Usb
+
+
+def get_invoice(request):
+    sales = Sales.objects.get(id=request.GET.get('id'))
+    context = {}
+    context['sales'] = sales
+    context['salesNumber'] = sales.__unicode__()
+    context['salesItems'] = []
+    for salesItem in sales.Sales.all():
+        context['salesItems'].append({'product':salesItem.fk_import.fk_product,'quantity':salesItem.quantity,'price':salesItem.price})
+    try:
+        context['company'] = Company.objects.all()[0]
+    except:
+        context['company'] = None
+    context['total'] = 0
+    for sales in context['salesItems']:
+        context['total'] += sales['price'] * sales['quantity'] 
+    return render(request, 'invoice/invoice.html', context)
+
 
 def getPDF(request, context,template,path,filename,displayInBrowserFlag,landscapeFlag):
     os.environ["DISPLAY"] = ":0"
@@ -50,24 +72,37 @@ def generateInvoice(request,sales,salesItems):
     reopen = open(path+filename, "rb")
     django_file = File(reopen)
     return django_file
-    
 
-def availableQuantityInLocation(fk_import_obj,fk_location_obj):
+def allProductWithCategory():
+    products = Product.objects.filter(displayFlag = True).select_related('fk_category')
+    categories = []
+    for product in products:
+        found = next((item for item in categories if item["category"].name == product.fk_category.name),False)
+        if found == False:
+            dic = {}
+            dic['category'] = product.fk_category
+            dic['products'] = [product]
+            categories.append(dic)
+        else:
+            found['products'].append(product)
+    return categories
+        
+def availableQuantityInLocation(fk_import_obj,fk_location_obj,dateFilter):
     availableQuantity = 0
-    totalTransferred = Transfers.objects.filter(Q(fk_location_from = fk_location_obj)|Q(fk_location_to = fk_location_obj),fk_import=fk_import_obj).aggregate(inTransfers = Coalesce(Sum(Case(When(fk_location_to = fk_location_obj, then='quantity'),output_field=IntegerField())),0) ,outTransfers = Coalesce(Sum(Case(When(fk_location_from = fk_location_obj, then='quantity'),output_field=IntegerField())),0))
+    totalTransferred = Transfers.objects.filter(Q(fk_location_from = fk_location_obj)|Q(fk_location_to = fk_location_obj),fk_import=fk_import_obj,the_date__lte = dateFilter).aggregate(inTransfers = Coalesce(Sum(Case(When(fk_location_to = fk_location_obj, then='quantity'),output_field=IntegerField())),0) ,outTransfers = Coalesce(Sum(Case(When(fk_location_from = fk_location_obj, then='quantity'),output_field=IntegerField())),0))
     availableQuantity += totalTransferred['inTransfers']
     availableQuantity -= totalTransferred['outTransfers']
-    soldQuantity = SalesItems.objects.filter(fk_import = fk_import_obj, fk_sales__fk_location = fk_location_obj).aggregate(soldQuantity = Coalesce(Sum('quantity'),0))['soldQuantity']
+    soldQuantity = SalesItems.objects.filter(fk_import = fk_import_obj, fk_sales__fk_location = fk_location_obj,fk_sales__the_date__lte = dateFilter).aggregate(soldQuantity = Coalesce(Sum('quantity'),0))['soldQuantity']
     availableQuantity -= soldQuantity
     return availableQuantity
 
-def availableImports(locations):
+def availableImports(locations,dateFilter):
     # show imports that has quantity
-    all_imports = Imports.objects.all()
+    all_imports = Imports.objects.filter(the_date__lte = dateFilter)
     importsAvaliable = []
     for one_import in all_imports:
         for one_location in locations:
-            if availableQuantityInLocation(one_import, one_location) > 0:
+            if availableQuantityInLocation(one_import, one_location,dateFilter) > 0:
                 importsAvaliable.append(one_import.id)
                 break
     return importsAvaliable
@@ -151,9 +186,25 @@ def locationAvailableQuantity(locationID,dateFilter):
             found['products'].append(productDic)
     return productCategory
             
-        
-        
-        
-        
+def importsDetailByIDs(IDs,dateFilter):
+    imports = Imports.objects.filter(id__in = IDs,the_date__lte = dateFilter).values('fk_product__fk_category__name','fk_product__name','the_date','id','quantity','price','selling_price','discount_rate').annotate(sold_quantity = Coalesce(Sum(Case(When(SoldImport__fk_sales__the_date__lte = dateFilter, then='SoldImport__quantity'),output_field=IntegerField())),0),salesIncome = Coalesce((Sum((Case(When(SoldImport__fk_sales__the_date__lte = dateFilter, then='SoldImport__quantity'),output_field=IntegerField()))*(Case(When(SoldImport__fk_sales__the_date__lte = dateFilter, then='SoldImport__price'),output_field=IntegerField())), output_field=models.FloatField())),0))
+    for oneImport in imports:
+        oneImport['available_quantity'] = oneImport['quantity'] - oneImport['sold_quantity']
+        oneImport['earned'] = oneImport['salesIncome'] - oneImport['price']
+        oneImport['ExpectedSellingPrice'] = ((oneImport['selling_price']*(100-oneImport['discount_rate']))/100) * oneImport['quantity']
+        oneImport['code'] = str(oneImport['id']) +'-'+ unicode(oneImport['fk_product__fk_category__name']) + '-' + oneImport['fk_product__name'] +'-IM'+ str(oneImport['the_date'].year)+ str(oneImport['the_date'].month)+ str(oneImport['the_date'].day)
+    return imports
+
+def getSalesPerDay(locations,fromDate,toDate):
+    sales = SalesItems.objects.filter(fk_sales__fk_location__in = locations,fk_sales__the_date__gte = fromDate, fk_sales__the_date__lte = toDate).values('fk_sales__the_date').annotate(salesIncome = Coalesce(Sum(F('quantity')*F('price'), output_field=models.FloatField()),0)).order_by('fk_sales__the_date')
+    totalNumOfDays = int((toDate - fromDate).days) + 1
+    perDay = [None] * totalNumOfDays
+    maxAge = 0
+    for oneSales in sales:
+        dayNum = (oneSales['fk_sales__the_date'] - fromDate).days
+        if dayNum >= 0 and dayNum < totalNumOfDays:
+            perDay[dayNum] = oneSales['salesIncome']
+            maxAge = max(maxAge,dayNum)
+    return perDay[:maxAge+1]
         
         

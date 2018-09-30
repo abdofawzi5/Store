@@ -1,0 +1,162 @@
+{% extends "StockDashboard/dashboard_layout.html" %}
+{% load i18n static%}
+{% block import_style%}
+  <!-- DataTables -->
+  <link href="{% static 'common/plugins/datatables/dataTables.bootstrap.css' %}" rel="stylesheet" type="text/css" />
+{%endblock%}
+{% block sidebar_menu%}
+{%endblock%}            
+{% block content_header%}
+<li><a href="#">{% trans "Imports" %}</a></li>
+{%endblock%}
+
+{% block main_content%}
+<div class="row">
+  <div class="col-md-12">
+    <div class="box">
+      <div class="box-header with-border">
+        <h3 class="box-title">{% trans "Availble Imports" %}</h3>
+        <div class="box-tools pull-right">
+          <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+          <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+        </div>
+      </div><!-- /.box-header -->
+      <div class="box-body">
+        <div class="row">
+          <div class="col-xs-12">
+            <!-- /.box-header -->
+            <div class="box-body table-responsive">
+              <table id="availbleImportsTable" class="table table-bordered table-hover table-striped">
+                <thead>
+                <tr>
+                  <th>{% trans "Category" %}</th>
+                  <th>{% trans "Product" %}</th>
+                  <th>{% trans "Date" %}</th>
+                  <th>{% trans "Quantity" %}</th>
+                  <th>{% trans "Sold Quantity" %}</th>
+                  <th>{% trans "Available Quantity" %}</th>
+                  <th>{% trans "Discount Rate" %}</th>
+                  <th>{% trans "Total Price" %}</th>
+                  <th>{% trans "Expected Selling Price" %}</th>
+                  <th>{% trans "Sales" %}</th>
+                  <th>{% trans "Earned" %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                  {% for oneImport in availableImports %}
+                    <tr>
+                      <td>{{oneImport.fk_product__fk_category__name}}</td>
+                      <td>{{oneImport.fk_product__name}}</td>
+                      <td>{{oneImport.the_date}}</td>
+                      <td>{{oneImport.quantity}}</td>
+                      <td>{{oneImport.sold_quantity}}</td>
+                      <td>{{oneImport.available_quantity}}</td>
+                      <td>{{oneImport.discount_rate}}</td>
+                      <td>{{oneImport.price}}</td>
+                      <td>{{oneImport.ExpectedSellingPrice}}&nbsp;&nbsp;<small>( {{oneImport.selling_price}} {% trans "per item" %}</small> )</td>
+                      <td>{{oneImport.salesIncome}}</td>
+                      {% if oneImport.earned > 0%}
+                      <td class="text-success" style="font-weight: bold;">{{oneImport.earned}}</td>
+                      {% else %}
+                      <td class="text-danger bg-danger"  style="font-weight: bold;">{{oneImport.earned}}</td>
+                      {% endif %}
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div><!-- /.col -->
+        </div> <!-- /.row -->
+      </div><!-- ./box-body -->
+    </div><!-- /.box -->
+  </div><!-- /.col -->
+</div><!-- /.row -->
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="box">
+      <div class="box-header with-border">
+        <h3 class="box-title">{% trans "Imports last 3 month" %}</h3>
+        <div class="box-tools pull-right">
+          <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+          <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+        </div>
+      </div><!-- /.box-header -->
+      <div class="box-body">
+        <div class="row">
+          <div class="col-xs-12">
+            <!-- /.box-header -->
+            <div class="box-body table-responsive">
+              <table id="last3monthImportsTable" class="table table-bordered table-hover table-striped">
+                <thead>
+                <tr>
+                  <th>{% trans "Category" %}</th>
+                  <th>{% trans "Product" %}</th>
+                  <th>{% trans "Date" %}</th>
+                  <th>{% trans "Quantity" %}</th>
+                  <th>{% trans "Sold Quantity" %}</th>
+                  <th>{% trans "Available Quantity" %}</th>
+                  <th>{% trans "Discount Rate" %}</th>
+                  <th>{% trans "Total Price" %}</th>
+                  <th>{% trans "Expected Selling Price" %}</th>
+                  <th>{% trans "Sales" %}</th>
+                  <th>{% trans "Earned" %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                  {% for oneImport in last3monthImports %}
+                    <tr>
+                      <td>{{oneImport.fk_product__fk_category__name}}</td>
+                      <td>{{oneImport.fk_product__name}}</td>
+                      <td>{{oneImport.the_date}}</td>
+                      <td>{{oneImport.quantity}}</td>
+                      <td>{{oneImport.sold_quantity}}</td>
+                      <td>{{oneImport.available_quantity}}</td>
+                      <td>{{oneImport.discount_rate}}</td>
+                      <td>{{oneImport.price}}</td>
+                      <td>{{oneImport.ExpectedSellingPrice}}&nbsp;&nbsp;<small>( {{oneImport.selling_price}} {% trans "per item" %}</small> )</td>
+                      <td>{{oneImport.salesIncome}}</td>
+                      {% if oneImport.earned > 0%}
+                      <td class="text-success" style="font-weight: bold;">{{oneImport.earned}}</td>
+                      {% else %}
+                      <td class="text-danger bg-danger"  style="font-weight: bold;">{{oneImport.earned}}</td>
+                      {% endif %}
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div><!-- /.col -->
+        </div> <!-- /.row -->
+      </div><!-- ./box-body -->
+    </div><!-- /.box -->
+  </div><!-- /.col -->
+</div><!-- /.row -->
+
+
+
+{%endblock%}
+{% block import_scripts%}
+<!-- DataTables -->
+<script src="{% static 'common/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'common/plugins/datatables/dataTables.bootstrap.min.js' %}"></script>
+
+<script type="text/javascript">
+  $('#availbleImportsTable').DataTable({
+    "paging": true,
+    "lengthChange": true,
+    "searching": true,
+    "ordering": true,
+    "info": true,
+    "autoWidth": true
+  });
+  $('#last3monthImportsTable').DataTable({
+    "paging": true,
+    "lengthChange": true,
+    "searching": true,
+    "ordering": true,
+    "info": true,
+    "autoWidth": true
+  });
+</script>
+{%endblock%}

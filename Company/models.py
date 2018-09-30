@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import  ugettext_lazy as _
 
-SHORT_NAME_LENGTH = 20
+SHORT_NAME_LENGTH = 40
 LONG_NAME_LENGTH = 50
 SHORT_TEXT_LENGTH = 100
 LONG_TEXT_LENGTH = 800
@@ -18,6 +18,7 @@ class Company(models.Model):
     phone = models.CharField(max_length = LONG_NAME_LENGTH, verbose_name = _('Phone'))
     address = models.CharField(max_length = LONG_NAME_LENGTH, verbose_name = _('Address'))
     email = models.EmailField(blank = True, null = True,verbose_name = _('Email'))
+    facebook = models.URLField(blank = True, null = True,verbose_name = _('Facebook'))
     
     def __unicode__(self):
         return unicode(self.name)

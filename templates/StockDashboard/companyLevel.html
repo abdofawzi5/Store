@@ -1,5 +1,5 @@
 {% extends "StockDashboard/dashboard_layout.html" %}
-{% load staticfiles %}
+{% load i18n static%}
 {% block import_style%}{%endblock%}
 {% block sidebar_menu%}
 {%endblock%}            
@@ -11,7 +11,7 @@
   <div class="col-md-12">
     <div class="box box-success">
       <div class="box-header with-border">
-        <h3 class="box-title">Availble Quantity</h3>
+        <h3 class="box-title">{% trans "Availble Quantity" %}</h3>
         <div class="box-tools pull-right">
           <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
           <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
@@ -21,21 +21,29 @@
         <div class="row">
             {% for category in companyAvailableQuantity%}
               <div class="col-md-3">
-                <div class="box-body">
+                <div class="box-body table-responsive">
                   <table class="table table-bordered table-hover table-striped">
                     <tr>
                       <th colspan="3" class="text-center"">{{category.category_name}}</th>
                     </tr>
                     <tr>
-                      <th>Product</th>
-                      <th>Quantity</th>
+                      <th>{% trans "Product" %}</th>
+                      <th>{% trans "Quantity" %}</th>
                     </tr>
                     {% for product in category.products%}
                     <tr>
+                      {% if product.quantity > 10 %}
                       <td>{{product.product_name}}</td>
                       <td>{{product.quantity}}</td>
-                    {% endfor %}
+                      {% elif product.quantity == 0 %}
+                      <td class="text-danger bg-danger"  style="font-weight: bold;">{{product.product_name}}</td>
+                      <td class="text-danger bg-danger"  style="font-weight: bold;">{{product.quantity}}</td>
+                      {% else %}
+                      <td class="bg-warning text-warning" style="font-weight:bold;">{{product.product_name}}</td>
+                      <td class="bg-warning text-warning" style="font-weight:bold;">{{product.quantity}}</td>
+                      {% endif %}
                     </tr>
+                    {% endfor %}
                   </table>
                 </div>            
               </div><!-- /.col -->
@@ -45,6 +53,25 @@
     </div><!-- /.box -->
   </div><!-- /.col -->
   
+  <div class="col-md-12">
+    <div class="box box-danger">
+      <div class="box-header with-border">
+        <h3 class="box-title"></h3>
+        <div class="box-tools pull-right">
+          <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+          <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+        </div>
+      </div><!-- /.box-header -->
+      <div class="box-body">
+        <div class="row">
+          <div class="col-md-12" style="direction:ltr;">
+              <div id="salesPerDayChart" style="margin: 0 auto;padding:10px;"></div>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- ./box-body -->
+    </div><!-- /.box -->
+  </div><!-- /.col -->
+
   <div class="col-md-6">
     <div class="box box-warning">
       <div class="box-header with-border">
@@ -56,8 +83,8 @@
       </div><!-- /.box-header -->
       <div class="box-body">
         <div class="row">
-          <div class="col-md-12">
-              <div id="soldQuantityLastMonthChart" style="margin: 0 auto"></div>
+          <div class="col-md-12" style="direction:ltr;">
+              <div id="soldQuantityLastMonthChart" style="margin: 0 auto;padding:10px;"></div>
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- ./box-body -->
@@ -65,7 +92,7 @@
   </div><!-- /.col -->
 
   <div class="col-md-6">
-    <div class="box box-danger">
+    <div class="box">
       <div class="box-header with-border">
         <h3 class="box-title"></h3>
         <div class="box-tools pull-right">
@@ -75,13 +102,14 @@
       </div><!-- /.box-header -->
       <div class="box-body">
         <div class="row">
-          <div class="col-md-12">
-              <div id="soldQuantityThisMonthChart" style="margin: 0 auto"></div>
+          <div class="col-md-12" style="direction:ltr;">
+              <div id="soldQuantityThisMonthChart" style="margin: 0 auto;padding:10px;"></div>
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- ./box-body -->
     </div><!-- /.box -->
   </div><!-- /.col -->
+
 
 
 
@@ -92,7 +120,15 @@
 {% block import_scripts%}
 
 <script type="text/javascript">
-    draw_chart_with_Drilldown('#soldQuantityThisMonthChart',{{soldQuantityThisMonthChart|safe}},0,null);
-    draw_chart_with_Drilldown('#soldQuantityLastMonthChart',{{soldQuantityLastMonthChart|safe}},0,null);
+    var reverse = null;
+    if ('{{language_code}}' == 'ar')
+    {
+      reverse = true;
+    }
+    draw_chart('#salesPerDayChart',{{salesPerDayChart|safe}},'spline',null,2,reverse)
+    draw_chart_with_Drilldown('#soldQuantityThisMonthChart',{{soldQuantityThisMonthChart|safe}},0,reverse);
+    draw_chart_with_Drilldown('#soldQuantityLastMonthChart',{{soldQuantityLastMonthChart|safe}},0,reverse);
+
+    salesPerDayChart
 </script>
 {%endblock%}

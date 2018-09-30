@@ -1,0 +1,23 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# Ignore compiled output
+*.pyc
+
+# Ignore migrations files
+*/migrations/*
+
+# Ignore DB dump
+db.sqlite3
+
+# Igonre static-root
+/static-root
+
+# Ignore uploaded file
+/media/task_attachments
+media-root/
+
+# Ignore logs
+static/logs/*
+
+#Igone Env. Variables
+.env

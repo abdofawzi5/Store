@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:5.7.23
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+  web:
+    entrypoint: ["./scripts/wait-for-it.sh", "db:3306","--"]
+    build: .
+    command: bash -c "./scripts/before-start.sh && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    env_file:
+     - .env
