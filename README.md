@@ -1,5 +1,5 @@
 # Stocky
-![alt text](https://github.com/abdofawzi5/Store/blob/master/screenshot/dashboard-view.png "Dashboard")
+![Dashboard](https://github.com/abdofawzi5/Store/blob/master/screenshots/dashboard-view.png "Dashboard")
 
 Stocky is Stock Management System, Built using [Django framework](https://www.djangoproject.com/)
 
