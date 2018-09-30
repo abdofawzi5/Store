@@ -1,5 +1,6 @@
 # Stocky
 ![alt text](https://preview.ibb.co/eaaXOe/Screenshot_from_2018_09_30_02_34_28.png "Dashboard")
+
 Stocky is Stock Management System, Built using [Django framework](https://www.djangoproject.com/)
 
 ## Why Stocky
