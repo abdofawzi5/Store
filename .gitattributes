@@ -1,5 +1,3 @@
-# Ignore static
-static/* linguist-vendored
-
-# Ignore html
-templates/* linguist-vendored
+# Ignore HTML. CSS, and JS libraries
+static/common/* linguist-vendored
+static/StockDashboard/* linguist-vendored
