@@ -1,8 +1,3 @@
-# Ignore static
-static/* linguist-vendored
-*css text eol=lf
-*js text eol=lf
-
-# Ignore html
-templates/* linguist-vendored
-*html text eol=lf
+# Ignore HTML. CSS, and JS libraries
+static/common/* linguist-vendored
+static/StockDashboard/* linguist-vendored
