@@ -1,5 +1,8 @@
 # Ignore static
 static/* linguist-vendored
+*css text eol=lf
+*js text eol=lf
 
 # Ignore html
 templates/* linguist-vendored
+*html text eol=lf
