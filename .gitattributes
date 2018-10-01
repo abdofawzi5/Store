@@ -1,0 +1,5 @@
+# Ignore static
+static/* linguist-vendored
+
+# Ignore html
+templates/* linguist-vendored
