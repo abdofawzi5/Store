@@ -3,3 +3,7 @@ static/* linguist-vendored
 
 # Ignore html
 templates/* linguist-vendored
+
+*html text linguist-vendored
+*css text linguist-vendored
+*js text linguist-vendored
